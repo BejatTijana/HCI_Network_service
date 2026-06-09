@@ -1,0 +1,107 @@
+<Window x:Class="NetworkService.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="clr-namespace:NetworkService.ViewModel"
+        xmlns:views="clr-namespace:NetworkService.Views"
+        xmlns:notifications="clr-namespace:Notification.Wpf.Controls;assembly=Notification.Wpf"
+        Title="NetworkService"
+        Width="390" Height="844"
+        ResizeMode="NoResize"
+        WindowStartupLocation="CenterScreen">
+    <Window.Resources>
+        <DataTemplate DataType="{x:Type vm:NetworkEntitiesViewModel}">
+            <views:NetworkEntitiesView/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:NetworkDisplayViewModel}">
+            <views:NetworkDisplayView/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:MeasurementGraphViewModel}">
+            <views:MeasurementGraphView/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:HomeViewModel}">
+            <views:HomeView/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:AddEntityViewModel}">
+            <views:AddEntityView/>
+        </DataTemplate>
+        <Style x:Key="BottomNavButton" TargetType="Button">
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <ContentPresenter HorizontalAlignment="Center"
+                                          VerticalAlignment="Center"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Opacity" Value="0.4"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+    </Window.Resources>
+    <Grid>
+    <DockPanel Background="#F5F5F5">
+        <!-- Status bar -->
+        <Border DockPanel.Dock="Top" Height="24" Background="{Binding StatusBarBackground}">
+            <Grid>
+                <TextBlock Text="9:41" Foreground="White" FontSize="10"
+                           HorizontalAlignment="Left" VerticalAlignment="Center"
+                           Margin="12,0,0,0"/>
+                <TextBlock Text="●●●" Foreground="White" FontSize="10"
+                           HorizontalAlignment="Right" VerticalAlignment="Center"
+                           Margin="0,0,12,0"/>
+            </Grid>
+        </Border>
+        <!-- Title bar -->
+        <Border DockPanel.Dock="Top" Height="48" Background="#44444444">
+            <Grid>
+                <TextBlock Text="{Binding ViewTitle}"
+                           Foreground="White" FontSize="16"
+                           HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                <Button Content="&lt; "
+                        Command="{Binding NavigateBackCommand}"
+                        Visibility="{Binding ShowBackButton, Converter={StaticResource BoolToVis}}"
+                        HorizontalAlignment="Left" VerticalAlignment="Center"
+                        Margin="8,0,0,0" Foreground="White" FontSize="16" Cursor="Hand"
+                        ToolTip="Go back">
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <ContentPresenter VerticalAlignment="Center"/>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+            </Grid>
+        </Border>
+        <!-- Bottom nav bar -->
+        <Border DockPanel.Dock="Bottom" Height="56" Background="#444444">
+            <UniformGrid Columns="3">
+                <Button Content="Home"
+                        Command="{Binding NavigateHomeCommand}"
+                        Style="{StaticResource BottomNavButton}"
+                        ToolTip="Home"/>
+                <Button Content="Undo"
+                        Command="{Binding UndoCommand}"
+                        Style="{StaticResource BottomNavButton}"
+                        ToolTip="Undo last action"/>
+                <Button Content="Menu"
+                        Command="{Binding NavigateHomeCommand}"
+                        Style="{StaticResource BottomNavButton}"
+                        ToolTip="Menu"/>
+            </UniformGrid>
+        </Border>
+        <!-- Content area -->
+        <ContentControl Content="{Binding CurrentViewModel}"
+                        HorizontalContentAlignment="Stretch"
+                        VerticalContentAlignment="Stretch"/>
+    </DockPanel>
+    <notifications:NotificationArea x:Name="WindowNotificationArea"
+        Panel.ZIndex="1000" MaxItems="3" Position="TopRight"/>
+    </Grid>
+</Window>

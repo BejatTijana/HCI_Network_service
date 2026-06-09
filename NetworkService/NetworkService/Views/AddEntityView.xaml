@@ -1,0 +1,83 @@
+<UserControl x:Class="NetworkService.Views.AddEntityView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:controls="clr-namespace:NetworkService.Controls"
+             mc:Ignorable="d"
+             Background="#F5F5F5">
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Form fields -->
+        <StackPanel Grid.Row="0" Margin="24,18,24,0">
+            <TextBlock Text="ID (auto)" Foreground="#666666" FontSize="12"/>
+            <TextBox Text="{Binding ID, Mode=OneWay}" IsEnabled="False" Height="36"
+                     Background="#EEEEEE" BorderBrush="#CCCCCC"
+                     Padding="8,0,0,0" VerticalContentAlignment="Center"
+                     Margin="0,8,0,0"/>
+
+            <TextBlock Text="Name*" Foreground="#666666" FontSize="12" Margin="0,14,0,0"/>
+            <Grid Margin="0,8,0,0">
+                <TextBox x:Name="nameTB"
+                         Text="{Binding Naziv, UpdateSourceTrigger=PropertyChanged}"
+                         Height="36" Background="White" BorderBrush="#CCCCCC"
+                         Padding="8,0,0,0" VerticalContentAlignment="Center"
+                         ToolTip="Enter entity name"/>
+                <TextBlock Text="Enter name..." Foreground="#AAAAAA"
+                           VerticalAlignment="Center" Margin="10,0,0,0"
+                           IsHitTestVisible="False">
+                    <TextBlock.Style>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Naziv}" Value="">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+            </Grid>
+            <TextBlock Text="{Binding NazivError}" Foreground="#BB0000" FontSize="11"
+                       Margin="0,4,0,0"
+                       Visibility="{Binding ShowNazivError, Converter={StaticResource BoolToVis}}"/>
+
+            <TextBlock Text="Type*" Foreground="#666666" FontSize="12" Margin="0,14,0,0"/>
+            <ComboBox ItemsSource="{Binding Types}"
+                      SelectedItem="{Binding SelectedType}"
+                      DisplayMemberPath="Ime"
+                      Height="36" BorderBrush="#CCCCCC" Margin="0,8,0,0"
+                      Cursor="Hand" ToolTip="Select entity type"/>
+
+            <TextBlock Text="Virtual keyboard" Foreground="#666666" FontSize="11"
+                       Margin="0,24,0,4"/>
+            <controls:VirtualKeyboardControl TargetTextBox="{Binding ElementName=nameTB}"/>
+        </StackPanel>
+
+        <!-- Buttons -->
+        <Grid Grid.Row="1" Margin="24,0,24,16">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="12"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="0" Content="&#x2715; Cancel" Height="44"
+                    Command="{Binding CancelCommand}"
+                    Background="White" Foreground="#444444"
+                    FontSize="14" BorderBrush="#CCCCCC" Cursor="Hand"
+                    ToolTip="Cancel and return"/>
+            <Button Grid.Column="2" Content="+ Add" Height="44"
+                    Command="{Binding SaveCommand}"
+                    Background="#555555" Foreground="White"
+                    FontSize="14" BorderThickness="0" Cursor="Hand"
+                    ToolTip="Save entity"/>
+        </Grid>
+    </Grid>
+</UserControl>
