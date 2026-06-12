@@ -57,6 +57,10 @@
                           DragOver="Slot_DragOver"
                           MouseDown="Slot_MouseDown"
                           ToolTip="{Binding DisplayText}">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="36"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
                         <Grid.Style>
                             <Style TargetType="Grid">
                                 <Style.Triggers>
@@ -71,7 +75,7 @@
                                 </Style.Triggers>
                             </Style>
                         </Grid.Style>
-                        <Rectangle RadiusX="10" RadiusY="10"
+                        <Rectangle Grid.RowSpan="2" RadiusX="10" RadiusY="10"
                                    Fill="#2C3E50" Stroke="#34495E" StrokeThickness="1">
                             <Rectangle.Style>
                                 <Style TargetType="Rectangle">
@@ -83,7 +87,14 @@
                                 </Style>
                             </Rectangle.Style>
                         </Rectangle>
-                        <TextBlock Text="{Binding DisplayText}"
+                        <Image Grid.Row="0"
+                               Source="{Binding Entity.Tip.Slika}"
+                               Width="28" Height="28"
+                               HorizontalAlignment="Center" VerticalAlignment="Center"
+                               SnapsToDevicePixels="True"
+                               Visibility="{Binding IsOccupied, Converter={StaticResource BoolToVis}}"/>
+                        <TextBlock Grid.Row="1"
+                                   Text="{Binding DisplayText}"
                                    TextAlignment="Center" TextWrapping="Wrap"
                                    FontSize="9"
                                    HorizontalAlignment="Center" VerticalAlignment="Center">
@@ -98,7 +109,7 @@
                                 </Style>
                             </TextBlock.Style>
                         </TextBlock>
-                        <Border BorderThickness="2" IsHitTestVisible="False">
+                        <Border Grid.RowSpan="2" BorderThickness="2" IsHitTestVisible="False">
                             <Border.Style>
                                 <Style TargetType="Border">
                                     <Setter Property="BorderBrush" Value="Transparent"/>

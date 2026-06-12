@@ -24,12 +24,14 @@ namespace NetworkService.ViewModel
                     if (_entity != null) _entity.PropertyChanged += OnEntityPropertyChanged;
                     OnPropertyChanged(nameof(Entity));
                     OnPropertyChanged(nameof(IsEmpty));
+                    OnPropertyChanged(nameof(IsOccupied));
                     OnPropertyChanged(nameof(IsOutOfRange));
                     OnPropertyChanged(nameof(DisplayText));
                 }
             }
 
             public bool IsEmpty => _entity == null;
+            public bool IsOccupied => _entity != null;
             public bool IsOutOfRange => _entity != null && !_entity.LastValueValid;
             public string DisplayText => _entity == null
                 ? "drag here"

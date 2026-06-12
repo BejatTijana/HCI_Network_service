@@ -157,8 +157,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="Resources\Images\SolarniPanel.png"/>
-    <None Include="Resources\Images\Vetrogenerator.png"/>
+    <Resource Include="Resources\Images\Logo.png"/>
+    <Resource Include="Resources\Images\SolarniPanel.png"/>
+    <Resource Include="Resources\Images\Vetrogenerator.png"/>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Commands\" />

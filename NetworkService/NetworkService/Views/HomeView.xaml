@@ -6,9 +6,11 @@
              mc:Ignorable="d"
              Background="#1C2833">
     <StackPanel>
-        <!-- App icon placeholder -->
-        <Border Width="70" Height="70" CornerRadius="14" Background="#1A5276"
-                HorizontalAlignment="Center" Margin="0,50,0,0"/>
+        <!-- App logo -->
+        <Image Source="/Resources/Images/Logo.png"
+               Width="90" Height="90"
+               HorizontalAlignment="Center" Margin="0,40,0,0"
+               SnapsToDevicePixels="True"/>
         <!-- App title -->
         <TextBlock Text="DER Monitor"
                    HorizontalAlignment="Center" FontSize="18"
