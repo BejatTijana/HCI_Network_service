@@ -4,28 +4,35 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              mc:Ignorable="d"
-             Background="#F5F5F5"
+             Background="#1C2833"
              Loaded="OnLoaded">
     <StackPanel>
-        <TextBlock Text="Entity:" FontSize="12" Foreground="#666666" Opacity="0.4"
+        <TextBlock Text="Entity:" FontSize="12" Foreground="#95A5A6" Opacity="0.4"
                    Margin="24,16,0,4"/>
         <ComboBox ItemsSource="{Binding Entities}"
                   SelectedItem="{Binding SelectedEntity, Mode=TwoWay}"
                   DisplayMemberPath="Naziv"
                   Width="342" Height="36" HorizontalAlignment="Left"
-                  Margin="24,0,0,0" Background="White" BorderBrush="#CCCCCC"
-                  Foreground="#444444" FontSize="13"
-                  Cursor="Hand" ToolTip="Select entity to view graph"/>
-        <TextBlock Text="Last 5 measurements" FontSize="12" Foreground="#666666"
+                  Margin="24,0,0,0" Background="#2C3E50" BorderBrush="#34495E"
+                  Foreground="#ECF0F1" FontSize="13"
+                  Cursor="Hand" ToolTip="Select entity to view graph">
+            <ComboBox.Resources>
+                <SolidColorBrush x:Key="{x:Static SystemColors.WindowBrushKey}" Color="#2C3E50"/>
+                <SolidColorBrush x:Key="{x:Static SystemColors.WindowTextBrushKey}" Color="#ECF0F1"/>
+                <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="#1F618D"/>
+                <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" Color="#ECF0F1"/>
+            </ComboBox.Resources>
+        </ComboBox>
+        <TextBlock Text="Last 5 measurements" FontSize="12" Foreground="#95A5A6"
                    Margin="24,12,0,4"/>
-        <Border Width="342" Height="200" BorderBrush="#CCCCCC" BorderThickness="1"
-                Background="White" HorizontalAlignment="Left" Margin="24,0,0,0"
+        <Border Width="342" Height="200" BorderBrush="#34495E" BorderThickness="1"
+                Background="#1C2833" HorizontalAlignment="Left" Margin="24,0,0,0"
                 ToolTip="Last 5 received measurements">
             <Canvas x:Name="GraphCanvas" Width="342" Height="200"/>
         </Border>
         <StackPanel Orientation="Horizontal" Margin="24,8,0,0">
-            <TextBlock Text="&#x25CF; Valid (1-5 MW)" FontSize="10" Foreground="#666666"/>
-            <TextBlock Text="&#x25CB; Invalid" FontSize="10" Foreground="#888888"
+            <TextBlock Text="&#x25CF; Valid (1-5 MW)" FontSize="10" Foreground="#27AE60"/>
+            <TextBlock Text="&#x25CB; Invalid" FontSize="10" Foreground="#E74C3C"
                        Margin="10,0,0,0"/>
         </StackPanel>
     </StackPanel>

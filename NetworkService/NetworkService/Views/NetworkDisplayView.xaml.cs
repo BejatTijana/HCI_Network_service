@@ -95,7 +95,7 @@ namespace NetworkService.Views
                     ConnectionCanvas.Children.Add(new Line
                     {
                         X1 = cA.X, Y1 = cA.Y, X2 = cB.X, Y2 = cB.Y,
-                        Stroke = new SolidColorBrush(Color.FromRgb(0x88, 0x88, 0x88)),
+                        Stroke = new SolidColorBrush(Color.FromRgb(0x7F, 0x8C, 0x8D)),
                         StrokeThickness = 2,
                         IsHitTestVisible = false
                     });

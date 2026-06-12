@@ -5,10 +5,10 @@
         Width="320" Height="180"
         ResizeMode="NoResize"
         WindowStartupLocation="CenterOwner"
-        Background="#F5F5F5">
+        Background="#1C2833">
     <StackPanel Margin="24">
         <TextBlock x:Name="MessageText" TextWrapping="Wrap"
-                   Foreground="#444444" FontSize="13" Margin="0,0,0,24"/>
+                   Foreground="#ECF0F1" FontSize="13" Margin="0,0,0,24"/>
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
@@ -17,12 +17,12 @@
             </Grid.ColumnDefinitions>
             <Button Grid.Column="0" Content="Cancel" Height="40"
                     Click="Cancel_Click"
-                    Background="White" Foreground="#444444"
-                    BorderBrush="#CCCCCC" FontSize="13" Cursor="Hand"
+                    Background="#34495E" Foreground="#ECF0F1"
+                    BorderBrush="#34495E" FontSize="13" Cursor="Hand"
                     ToolTip="Cancel deletion"/>
             <Button Grid.Column="2" Content="Delete" Height="40"
                     Click="Delete_Click"
-                    Background="#CC3333" Foreground="White"
+                    Background="#C0392B" Foreground="#ECF0F1"
                     BorderThickness="0" FontSize="13" Cursor="Hand"
                     ToolTip="Confirm delete"/>
         </Grid>

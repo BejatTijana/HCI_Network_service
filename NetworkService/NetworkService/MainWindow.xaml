@@ -24,20 +24,11 @@
         <DataTemplate DataType="{x:Type vm:AddEntityViewModel}">
             <views:AddEntityView/>
         </DataTemplate>
-        <Style x:Key="BottomNavButton" TargetType="Button">
-            <Setter Property="Foreground" Value="White"/>
+        <Style x:Key="BottomNavButton" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+            <Setter Property="Foreground" Value="#ECF0F1"/>
             <Setter Property="FontSize" Value="12"/>
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="BorderThickness" Value="0"/>
-            <Setter Property="Cursor" Value="Hand"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <ContentPresenter HorizontalAlignment="Center"
-                                          VerticalAlignment="Center"/>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
             <Style.Triggers>
                 <Trigger Property="IsEnabled" Value="False">
                     <Setter Property="Opacity" Value="0.4"/>
@@ -47,29 +38,29 @@
         <BooleanToVisibilityConverter x:Key="BoolToVis"/>
     </Window.Resources>
     <Grid>
-    <DockPanel Background="#F5F5F5">
+    <DockPanel Background="#1C2833">
         <!-- Status bar -->
         <Border DockPanel.Dock="Top" Height="24" Background="{Binding StatusBarBackground}">
             <Grid>
-                <TextBlock Text="9:41" Foreground="White" FontSize="10"
+                <TextBlock Text="9:41" Foreground="#ECF0F1" FontSize="10"
                            HorizontalAlignment="Left" VerticalAlignment="Center"
                            Margin="12,0,0,0"/>
-                <TextBlock Text="●●●" Foreground="White" FontSize="10"
+                <TextBlock Text="●●●" Foreground="#ECF0F1" FontSize="10"
                            HorizontalAlignment="Right" VerticalAlignment="Center"
                            Margin="0,0,12,0"/>
             </Grid>
         </Border>
         <!-- Title bar -->
-        <Border DockPanel.Dock="Top" Height="48" Background="#44444444">
+        <Border DockPanel.Dock="Top" Height="48" Background="#17202A">
             <Grid>
                 <TextBlock Text="{Binding ViewTitle}"
-                           Foreground="White" FontSize="16"
+                           Foreground="#ECF0F1" FontSize="16"
                            HorizontalAlignment="Center" VerticalAlignment="Center"/>
                 <Button Content="&lt; "
                         Command="{Binding NavigateBackCommand}"
                         Visibility="{Binding ShowBackButton, Converter={StaticResource BoolToVis}}"
                         HorizontalAlignment="Left" VerticalAlignment="Center"
-                        Margin="8,0,0,0" Foreground="White" FontSize="16" Cursor="Hand"
+                        Margin="8,0,0,0" Foreground="#ECF0F1" FontSize="16" Cursor="Hand"
                         ToolTip="Go back">
                     <Button.Template>
                         <ControlTemplate TargetType="Button">
@@ -80,7 +71,7 @@
             </Grid>
         </Border>
         <!-- Bottom nav bar -->
-        <Border DockPanel.Dock="Bottom" Height="56" Background="#444444">
+        <Border DockPanel.Dock="Bottom" Height="56" Background="#17202A">
             <UniformGrid Columns="3">
                 <Button Content="Home"
                         Command="{Binding NavigateHomeCommand}"

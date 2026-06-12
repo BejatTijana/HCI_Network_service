@@ -4,35 +4,43 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              mc:Ignorable="d"
-             Background="#F5F5F5">
+             Background="#1C2833">
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVis"/>
     </UserControl.Resources>
     <StackPanel>
-        <TextBlock Text="Entities" FontSize="12" Foreground="#666666"
+        <TextBlock Text="Entities" FontSize="12" Foreground="#95A5A6"
                    Margin="24,16,0,4"/>
-        <Border Width="342" Height="120" BorderBrush="#CCCCCC" BorderThickness="1"
-                Background="White" HorizontalAlignment="Left" Margin="24,0,0,0">
+        <Border Width="342" Height="120" BorderBrush="#34495E" BorderThickness="1"
+                Background="#2C3E50" HorizontalAlignment="Left" Margin="24,0,0,0">
             <TreeView ItemsSource="{Binding EntityGroups}"
                       BorderThickness="0" Background="Transparent"
                       Cursor="Hand" ToolTip="Drag entity to place it on the grid"
                       PreviewMouseLeftButtonDown="TV_PreviewMouseDown"
                       MouseMove="TV_MouseMove">
+                <TreeView.Resources>
+                    <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="#1F618D"/>
+                    <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" Color="#ECF0F1"/>
+                    <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}" Color="#2C3E50"/>
+                    <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightTextBrushKey}" Color="#ECF0F1"/>
+                    <SolidColorBrush x:Key="{x:Static SystemColors.ControlBrushKey}" Color="#1C2833"/>
+                    <SolidColorBrush x:Key="{x:Static SystemColors.WindowBrushKey}" Color="#1C2833"/>
+                </TreeView.Resources>
                 <TreeView.ItemTemplate>
                     <HierarchicalDataTemplate ItemsSource="{Binding Entities}">
                         <HierarchicalDataTemplate.ItemTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding Naziv, StringFormat='&#x2022; {0}'}"
-                                           Foreground="#666666" FontSize="12"/>
+                                           Foreground="#95A5A6" FontSize="12"/>
                             </DataTemplate>
                         </HierarchicalDataTemplate.ItemTemplate>
                         <TextBlock Text="{Binding TypeName, StringFormat='&#x25BC; {0}'}"
-                                   Foreground="#444444" FontSize="12"/>
+                                   Foreground="#ECF0F1" FontSize="12"/>
                     </HierarchicalDataTemplate>
                 </TreeView.ItemTemplate>
             </TreeView>
         </Border>
-        <TextBlock Text="Drag &amp; Drop grid" FontSize="12" Foreground="#666666"
+        <TextBlock Text="Drag &amp; Drop grid" FontSize="12" Foreground="#95A5A6"
                    Margin="24,16,0,8"/>
         <Grid Margin="24,0,24,0">
         <ItemsControl x:Name="SlotsControl" ItemsSource="{Binding CanvasSlots}">
@@ -64,7 +72,7 @@
                             </Style>
                         </Grid.Style>
                         <Rectangle RadiusX="10" RadiusY="10"
-                                   Fill="White" Stroke="#CCCCCC" StrokeThickness="1">
+                                   Fill="#2C3E50" Stroke="#34495E" StrokeThickness="1">
                             <Rectangle.Style>
                                 <Style TargetType="Rectangle">
                                     <Style.Triggers>
@@ -81,10 +89,10 @@
                                    HorizontalAlignment="Center" VerticalAlignment="Center">
                             <TextBlock.Style>
                                 <Style TargetType="TextBlock">
-                                    <Setter Property="Foreground" Value="#000000"/>
+                                    <Setter Property="Foreground" Value="#ECF0F1"/>
                                     <Style.Triggers>
                                         <DataTrigger Binding="{Binding IsOutOfRange}" Value="True">
-                                            <Setter Property="Foreground" Value="#FF0000"/>
+                                            <Setter Property="Foreground" Value="#E74C3C"/>
                                         </DataTrigger>
                                     </Style.Triggers>
                                 </Style>

@@ -4,63 +4,63 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              mc:Ignorable="d"
-             Background="#F5F5F5">
+             Background="#1C2833">
     <StackPanel>
         <!-- App icon placeholder -->
-        <Border Width="70" Height="70" CornerRadius="14" Background="#555555"
+        <Border Width="70" Height="70" CornerRadius="14" Background="#1A5276"
                 HorizontalAlignment="Center" Margin="0,50,0,0"/>
         <!-- App title -->
         <TextBlock Text="DER Monitor"
                    HorizontalAlignment="Center" FontSize="18"
-                   Foreground="#9E9E9E" Margin="0,16,0,0"/>
+                   Foreground="#27AE60" Margin="0,16,0,0"/>
         <!-- Subtitle -->
         <TextBlock Text="Simulator infrastrukturnog sistema"
                    HorizontalAlignment="Center" FontSize="12"
-                   Foreground="#555555" Opacity="0.8" Margin="0,8,0,0"/>
+                   Foreground="#95A5A6" Opacity="0.8" Margin="0,8,0,0"/>
         <!-- Row 1: Network Entities -->
-        <Border Height="52" Margin="24,24,24,0" Background="White"
-                BorderBrush="#CCCCCC" BorderThickness="1" Cursor="Hand">
+        <Border Height="52" Margin="24,24,24,0" Background="#2C3E50"
+                BorderBrush="#34495E" BorderThickness="1" Cursor="Hand">
             <Border.InputBindings>
                 <MouseBinding MouseAction="LeftClick"
                     Command="{Binding DataContext.NavigateToEntitiesCommand,
                               RelativeSource={RelativeSource AncestorType=Window}}"/>
             </Border.InputBindings>
             <Grid>
-                <TextBlock Text="Network Entities" FontSize="14" Foreground="#222222"
+                <TextBlock Text="Network Entities" FontSize="14" Foreground="#ECF0F1"
                            VerticalAlignment="Center" Margin="27,0,0,0"/>
-                <TextBlock Text="›" FontSize="14" Foreground="#AAAAAA"
+                <TextBlock Text="›" FontSize="14" Foreground="#7F8C8D"
                            HorizontalAlignment="Right" VerticalAlignment="Center"
                            Margin="0,0,15,0"/>
             </Grid>
         </Border>
         <!-- Row 2: Network Display -->
-        <Border Height="52" Margin="24,8,24,0" Background="White"
-                BorderBrush="#CCCCCC" BorderThickness="1" Cursor="Hand">
+        <Border Height="52" Margin="24,8,24,0" Background="#2C3E50"
+                BorderBrush="#34495E" BorderThickness="1" Cursor="Hand">
             <Border.InputBindings>
                 <MouseBinding MouseAction="LeftClick"
                     Command="{Binding DataContext.NavigateToDisplayCommand,
                               RelativeSource={RelativeSource AncestorType=Window}}"/>
             </Border.InputBindings>
             <Grid>
-                <TextBlock Text="Network Display" FontSize="14" Foreground="#222222"
+                <TextBlock Text="Network Display" FontSize="14" Foreground="#ECF0F1"
                            VerticalAlignment="Center" Margin="27,0,0,0"/>
-                <TextBlock Text="›" FontSize="14" Foreground="#AAAAAA"
+                <TextBlock Text="›" FontSize="14" Foreground="#7F8C8D"
                            HorizontalAlignment="Right" VerticalAlignment="Center"
                            Margin="0,0,15,0"/>
             </Grid>
         </Border>
         <!-- Row 3: Graph view -->
-        <Border Height="52" Margin="24,8,24,0" Background="White"
-                BorderBrush="#CCCCCC" BorderThickness="1" Cursor="Hand">
+        <Border Height="52" Margin="24,8,24,0" Background="#2C3E50"
+                BorderBrush="#34495E" BorderThickness="1" Cursor="Hand">
             <Border.InputBindings>
                 <MouseBinding MouseAction="LeftClick"
                     Command="{Binding DataContext.NavigateToGraphCommand,
                               RelativeSource={RelativeSource AncestorType=Window}}"/>
             </Border.InputBindings>
             <Grid>
-                <TextBlock Text="Graph view" FontSize="14" Foreground="#222222"
+                <TextBlock Text="Graph view" FontSize="14" Foreground="#ECF0F1"
                            VerticalAlignment="Center" Margin="27,0,0,0"/>
-                <TextBlock Text="›" FontSize="14" Foreground="#AAAAAA"
+                <TextBlock Text="›" FontSize="14" Foreground="#7F8C8D"
                            HorizontalAlignment="Right" VerticalAlignment="Center"
                            Margin="0,0,15,0"/>
             </Grid>

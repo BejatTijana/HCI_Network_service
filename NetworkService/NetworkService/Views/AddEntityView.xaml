@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:controls="clr-namespace:NetworkService.Controls"
              mc:Ignorable="d"
-             Background="#F5F5F5">
+             Background="#1C2833">
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVis"/>
     </UserControl.Resources>
@@ -17,20 +17,21 @@
 
         <!-- Form fields -->
         <StackPanel Grid.Row="0" Margin="24,18,24,0">
-            <TextBlock Text="ID (auto)" Foreground="#666666" FontSize="12"/>
+            <TextBlock Text="ID (auto)" Foreground="#95A5A6" FontSize="12"/>
             <TextBox Text="{Binding ID, Mode=OneWay}" IsEnabled="False" Height="36"
-                     Background="#EEEEEE" BorderBrush="#CCCCCC"
+                     Background="#34495E" BorderBrush="#34495E" Foreground="#ECF0F1"
                      Padding="8,0,0,0" VerticalContentAlignment="Center"
                      Margin="0,8,0,0"/>
 
-            <TextBlock Text="Name*" Foreground="#666666" FontSize="12" Margin="0,14,0,0"/>
+            <TextBlock Text="Name*" Foreground="#95A5A6" FontSize="12" Margin="0,14,0,0"/>
             <Grid Margin="0,8,0,0">
                 <TextBox x:Name="nameTB"
                          Text="{Binding Naziv, UpdateSourceTrigger=PropertyChanged}"
-                         Height="36" Background="White" BorderBrush="#CCCCCC"
+                         Height="36" Background="#2C3E50" BorderBrush="#34495E"
+                         Foreground="#ECF0F1"
                          Padding="8,0,0,0" VerticalContentAlignment="Center"
                          ToolTip="Enter entity name"/>
-                <TextBlock Text="Enter name..." Foreground="#AAAAAA"
+                <TextBlock Text="Enter name..." Foreground="#7F8C8D"
                            VerticalAlignment="Center" Margin="10,0,0,0"
                            IsHitTestVisible="False">
                     <TextBlock.Style>
@@ -45,18 +46,25 @@
                     </TextBlock.Style>
                 </TextBlock>
             </Grid>
-            <TextBlock Text="{Binding NazivError}" Foreground="#BB0000" FontSize="11"
+            <TextBlock Text="{Binding NazivError}" Foreground="#E74C3C" FontSize="11"
                        Margin="0,4,0,0"
                        Visibility="{Binding ShowNazivError, Converter={StaticResource BoolToVis}}"/>
 
-            <TextBlock Text="Type*" Foreground="#666666" FontSize="12" Margin="0,14,0,0"/>
+            <TextBlock Text="Type*" Foreground="#95A5A6" FontSize="12" Margin="0,14,0,0"/>
             <ComboBox ItemsSource="{Binding Types}"
                       SelectedItem="{Binding SelectedType}"
                       DisplayMemberPath="Ime"
-                      Height="36" BorderBrush="#CCCCCC" Margin="0,8,0,0"
-                      Cursor="Hand" ToolTip="Select entity type"/>
+                      Height="36" BorderBrush="#34495E" Foreground="#ECF0F1" Margin="0,8,0,0"
+                      Cursor="Hand" ToolTip="Select entity type">
+                <ComboBox.Resources>
+                    <SolidColorBrush x:Key="{x:Static SystemColors.WindowBrushKey}" Color="#2C3E50"/>
+                    <SolidColorBrush x:Key="{x:Static SystemColors.WindowTextBrushKey}" Color="#ECF0F1"/>
+                    <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="#1F618D"/>
+                    <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" Color="#ECF0F1"/>
+                </ComboBox.Resources>
+            </ComboBox>
 
-            <TextBlock Text="Virtual keyboard" Foreground="#666666" FontSize="11"
+            <TextBlock Text="Virtual keyboard" Foreground="#95A5A6" FontSize="11"
                        Margin="0,24,0,4"/>
             <controls:VirtualKeyboardControl TargetTextBox="{Binding ElementName=nameTB}"/>
         </StackPanel>
@@ -70,12 +78,12 @@
             </Grid.ColumnDefinitions>
             <Button Grid.Column="0" Content="&#x2715; Cancel" Height="44"
                     Command="{Binding CancelCommand}"
-                    Background="White" Foreground="#444444"
-                    FontSize="14" BorderBrush="#CCCCCC" Cursor="Hand"
+                    Background="#34495E" Foreground="#ECF0F1"
+                    FontSize="14" BorderBrush="#34495E" Cursor="Hand"
                     ToolTip="Cancel and return"/>
             <Button Grid.Column="2" Content="+ Add" Height="44"
                     Command="{Binding SaveCommand}"
-                    Background="#555555" Foreground="White"
+                    Background="#1E8449" Foreground="#ECF0F1"
                     FontSize="14" BorderThickness="0" Cursor="Hand"
                     ToolTip="Save entity"/>
         </Grid>

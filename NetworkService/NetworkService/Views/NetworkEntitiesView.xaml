@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:controls="clr-namespace:NetworkService.Controls"
              mc:Ignorable="d"
-             Background="#F5F5F5">
+             Background="#1C2833">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -19,10 +19,10 @@
         <StackPanel Grid.Row="0" Margin="24,16,24,0">
             <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
                 <RadioButton Content="Name" IsChecked="{Binding SearchByName}"
-                             Foreground="#444444" Margin="0,0,16,0" Cursor="Hand"
+                             Foreground="#ECF0F1" Margin="0,0,16,0" Cursor="Hand"
                              ToolTip="Search by entity name"/>
                 <RadioButton Content="Type" IsChecked="{Binding SearchByType}"
-                             Foreground="#444444" Cursor="Hand"
+                             Foreground="#ECF0F1" Cursor="Hand"
                              ToolTip="Search by entity type"/>
             </StackPanel>
             <Grid>
@@ -33,9 +33,10 @@
                 <Grid Grid.Column="0">
                     <TextBox x:Name="searchTB"
                              Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
-                             Height="36" Background="White" BorderBrush="#CCCCCC"
+                             Height="36" Background="#2C3E50" BorderBrush="#34495E"
+                             Foreground="#ECF0F1"
                              Padding="8,0,0,0" VerticalContentAlignment="Center"/>
-                    <TextBlock Text="Search..." Foreground="#AAAAAA"
+                    <TextBlock Text="Search..." Foreground="#7F8C8D"
                                VerticalAlignment="Center" Margin="10,0,0,0"
                                IsHitTestVisible="False">
                         <TextBlock.Style>
@@ -52,7 +53,7 @@
                 </Grid>
                 <Button Grid.Column="1" Content="X" Height="36"
                         Command="{Binding ClearSearchCommand}"
-                        Background="#EEEEEE" BorderBrush="#CCCCCC"
+                        Background="#34495E" BorderBrush="#34495E"
                         FontSize="12" Cursor="Hand" ToolTip="Clear search"/>
             </Grid>
         </StackPanel>
@@ -62,8 +63,16 @@
                   ItemsSource="{Binding FilteredEntities}"
                   SelectedItem="{Binding SelectedEntity, Mode=TwoWay}"
                   AlternationCount="2"
-                  BorderBrush="#EEEEEE" BorderThickness="1"
+                  Background="#1C2833" BorderBrush="#34495E" BorderThickness="1"
                   ToolTip="Select entity to delete or view">
+            <ListView.Resources>
+                <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="#1F618D"/>
+                <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" Color="#ECF0F1"/>
+                <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}" Color="#2C3E50"/>
+                <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightTextBrushKey}" Color="#ECF0F1"/>
+                <SolidColorBrush x:Key="{x:Static SystemColors.ControlBrushKey}" Color="#1C2833"/>
+                <SolidColorBrush x:Key="{x:Static SystemColors.WindowBrushKey}" Color="#1C2833"/>
+            </ListView.Resources>
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="ID" Width="50"
@@ -79,13 +88,44 @@
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">
                     <Setter Property="FontSize" Value="11"/>
-                    <Setter Property="Background" Value="White"/>
+                    <Setter Property="Foreground" Value="#ECF0F1"/>
+                    <Setter Property="Background" Value="#2C3E50"/>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="ListViewItem">
+                                <Border x:Name="bd"
+                                        Background="{TemplateBinding Background}"
+                                        BorderThickness="0,0,0,1"
+                                        BorderBrush="#34495E">
+                                    <GridViewRowPresenter
+                                        Content="{TemplateBinding Content}"
+                                        Columns="{TemplateBinding GridView.ColumnCollection}"
+                                        Margin="0,4,0,4"/>
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter TargetName="bd" Property="Background" Value="#253545"/>
+                                    </Trigger>
+                                    <Trigger Property="IsSelected" Value="True">
+                                        <Setter TargetName="bd" Property="Background" Value="#1F618D"/>
+                                    </Trigger>
+                                    <MultiTrigger>
+                                        <MultiTrigger.Conditions>
+                                            <Condition Property="IsSelected" Value="True"/>
+                                            <Condition Property="IsMouseOver" Value="True"/>
+                                        </MultiTrigger.Conditions>
+                                        <Setter TargetName="bd" Property="Background" Value="#1A5276"/>
+                                    </MultiTrigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
                     <Style.Triggers>
                         <Trigger Property="ItemsControl.AlternationIndex" Value="1">
-                            <Setter Property="Background" Value="#E8E8E8"/>
+                            <Setter Property="Background" Value="#253545"/>
                         </Trigger>
                         <Trigger Property="IsSelected" Value="True">
-                            <Setter Property="Background" Value="#CCDDFF"/>
+                            <Setter Property="Background" Value="#1F618D"/>
                         </Trigger>
                     </Style.Triggers>
                 </Style>
@@ -101,19 +141,19 @@
             </Grid.ColumnDefinitions>
             <Button Grid.Column="0" Content="+ Add" Height="44"
                     Command="{Binding NavigateToAddCommand}"
-                    Background="#555555" Foreground="White"
+                    Background="#1E8449" Foreground="#ECF0F1"
                     FontSize="14" BorderThickness="0" Cursor="Hand"
                     ToolTip="Add new entity"/>
             <Button Grid.Column="2" Content="Delete" Height="44"
                     Command="{Binding DeleteCommand}"
-                    Background="White" Foreground="#444444"
-                    FontSize="14" BorderBrush="#CCCCCC" Cursor="Hand"
+                    Background="#34495E" Foreground="#ECF0F1"
+                    FontSize="14" BorderBrush="#34495E" Cursor="Hand"
                     ToolTip="Delete selected entity"/>
         </Grid>
 
         <!-- Keyboard -->
         <StackPanel Grid.Row="3" Margin="24,8,24,0">
-            <TextBlock Text="Virtual keyboard" Foreground="#666666" FontSize="11" Margin="0,0,0,4"/>
+            <TextBlock Text="Virtual keyboard" Foreground="#95A5A6" FontSize="11" Margin="0,0,0,4"/>
             <controls:VirtualKeyboardControl TargetTextBox="{Binding ElementName=searchTB}"/>
         </StackPanel>
     </Grid>

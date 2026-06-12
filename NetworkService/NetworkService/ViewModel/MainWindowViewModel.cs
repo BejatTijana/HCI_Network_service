@@ -85,7 +85,7 @@ namespace NetworkService.ViewModel
         }
 
         public string StatusBarBackground
-            => CurrentViewModel is NetworkEntitiesViewModel ? "#444444" : "#333333";
+            => CurrentViewModel is NetworkEntitiesViewModel ? "#1F618D" : "#1A5276";
 
         public ICommand NavigateHomeCommand { get; }
         public ICommand NavigateToEntitiesCommand { get; }

@@ -55,7 +55,7 @@ namespace NetworkService.Views
                 GraphCanvas.Children.Add(new Line
                 {
                     X1 = cx[i], Y1 = cy[i], X2 = cx[i + 1], Y2 = cy[i + 1],
-                    Stroke = Brushes.Black, StrokeThickness = 1
+                    Stroke = new SolidColorBrush(Color.FromRgb(0x7F, 0x8C, 0x8D)), StrokeThickness = 1
                 });
             }
 
@@ -66,14 +66,14 @@ namespace NetworkService.Views
                 var ellipse = new Ellipse { Width = 32, Height = 32 };
                 if (p.IsValid)
                 {
-                    ellipse.Fill = new SolidColorBrush(Color.FromRgb(0xEE, 0xEE, 0xEE));
-                    ellipse.Stroke = new SolidColorBrush(Color.FromRgb(0x88, 0x88, 0x88));
+                    ellipse.Fill = new SolidColorBrush(Color.FromRgb(0x1E, 0x84, 0x49));
+                    ellipse.Stroke = new SolidColorBrush(Color.FromRgb(0x27, 0xAE, 0x60));
                     ellipse.StrokeThickness = 1;
                 }
                 else
                 {
-                    ellipse.Fill = Brushes.White;
-                    ellipse.Stroke = new SolidColorBrush(Color.FromRgb(0x99, 0x99, 0x99));
+                    ellipse.Fill = new SolidColorBrush(Color.FromRgb(0x92, 0x2B, 0x21));
+                    ellipse.Stroke = new SolidColorBrush(Color.FromRgb(0xE7, 0x4C, 0x3C));
                     ellipse.StrokeThickness = 1;
                     ellipse.StrokeDashArray = new DoubleCollection { 4, 2 };
                     ellipse.Effect = new DropShadowEffect
@@ -87,7 +87,7 @@ namespace NetworkService.Views
                 {
                     Text = p.Value.ToString("F1"), FontSize = 12,
                     Width = 32, TextAlignment = TextAlignment.Center,
-                    Foreground = Brushes.Black
+                    Foreground = Brushes.White
                 };
                 Canvas.SetLeft(valueLabel, cx[i] - 16);
                 Canvas.SetTop(valueLabel, cy[i] - 8);
@@ -97,7 +97,7 @@ namespace NetworkService.Views
                 {
                     Text = p.Timestamp.ToString("HH:mm", CultureInfo.InvariantCulture), FontSize = 8,
                     Width = 32, TextAlignment = TextAlignment.Center,
-                    Foreground = new SolidColorBrush(Color.FromRgb(0x88, 0x88, 0x88))
+                    Foreground = new SolidColorBrush(Color.FromRgb(0x95, 0xA5, 0xA6))
                 };
                 Canvas.SetLeft(tsLabel, cx[i] - 16);
                 Canvas.SetTop(tsLabel, 185);
