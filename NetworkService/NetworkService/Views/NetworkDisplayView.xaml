@@ -12,7 +12,10 @@
         <TextBlock Text="Entities" FontSize="12" Foreground="#95A5A6"
                    Margin="24,16,0,4"/>
         <Border Width="342" Height="120" BorderBrush="#34495E" BorderThickness="1"
-                Background="#2C3E50" HorizontalAlignment="Left" Margin="24,0,0,0">
+                Background="#2C3E50" HorizontalAlignment="Left" Margin="24,0,0,0"
+                AllowDrop="True"
+                Drop="TV_Drop"
+                DragOver="TV_AreaDragOver">
             <TreeView ItemsSource="{Binding EntityGroups}"
                       BorderThickness="0" Background="Transparent"
                       Cursor="Hand" ToolTip="Drag entity to place it on the grid"
@@ -55,7 +58,9 @@
                           AllowDrop="True"
                           Drop="Slot_Drop"
                           DragOver="Slot_DragOver"
-                          MouseDown="Slot_MouseDown"
+                          PreviewMouseLeftButtonDown="Slot_PreviewMouseDown"
+                          MouseMove="Slot_SlotMouseMove"
+                          MouseLeftButtonUp="Slot_MouseUp"
                           ToolTip="{Binding DisplayText}">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="36"/>
@@ -125,7 +130,19 @@
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>
-        <Canvas x:Name="ConnectionCanvas" IsHitTestVisible="False"/>
+        <ItemsControl ItemsSource="{Binding ConnectionLines}" IsHitTestVisible="False">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <Canvas IsHitTestVisible="False"/>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Line X1="{Binding X1}" Y1="{Binding Y1}" X2="{Binding X2}" Y2="{Binding Y2}"
+                          Stroke="#7F8C8D" StrokeThickness="2" IsHitTestVisible="False"/>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
         </Grid>
     </StackPanel>
 </UserControl>

@@ -6,11 +6,8 @@ namespace NetworkService.Controls
     public partial class VirtualKeyboardControl : UserControl
     {
         public static readonly DependencyProperty TargetTextBoxProperty =
-            DependencyProperty.Register(
-                "TargetTextBox",
-                typeof(TextBox),
-                typeof(VirtualKeyboardControl),
-                new PropertyMetadata(null));
+            DependencyProperty.Register("TargetTextBox", typeof(TextBox),
+                typeof(VirtualKeyboardControl), new PropertyMetadata(null));
 
         public TextBox TargetTextBox
         {
@@ -18,10 +15,7 @@ namespace NetworkService.Controls
             set => SetValue(TargetTextBoxProperty, value);
         }
 
-        public VirtualKeyboardControl()
-        {
-            InitializeComponent();
-        }
+        public VirtualKeyboardControl() { InitializeComponent(); }
 
         private void OnKeyClick(object sender, RoutedEventArgs e)
         {
@@ -31,26 +25,14 @@ namespace NetworkService.Controls
             int caret = tb.CaretIndex;
             if (key == "⌫")
             {
-                if (caret > 0)
-                {
-                    tb.Text = tb.Text.Remove(caret - 1, 1);
-                    tb.CaretIndex = caret - 1;
-                }
+                if (caret > 0) { tb.Text = tb.Text.Remove(caret - 1, 1); tb.CaretIndex = caret - 1; }
             }
             else if (key == "space")
             {
-                tb.Text = tb.Text.Insert(caret, " ");
-                tb.CaretIndex = caret + 1;
+                tb.Text = tb.Text.Insert(caret, " "); tb.CaretIndex = caret + 1;
             }
-            else if (key == "↵" || key == "123")
-            {
-                // no-op
-            }
-            else
-            {
-                tb.Text = tb.Text.Insert(caret, key);
-                tb.CaretIndex = caret + 1;
-            }
+            else if (key == "↵" || key == "123") { }
+            else { tb.Text = tb.Text.Insert(caret, key); tb.CaretIndex = caret + 1; }
         }
     }
 }

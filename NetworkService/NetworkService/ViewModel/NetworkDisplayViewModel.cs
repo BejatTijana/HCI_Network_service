@@ -61,6 +61,14 @@ namespace NetworkService.ViewModel
             public List<NetworkEntity> Entities { get; set; }
         }
 
+        public class ConnectionLineData
+        {
+            public double X1 { get; set; }
+            public double Y1 { get; set; }
+            public double X2 { get; set; }
+            public double Y2 { get; set; }
+        }
+
         private readonly ObservableCollection<NetworkEntity> _entities;
         private readonly Action<Action> _pushUndo;
         private readonly List<(int, int)> _connections = new List<(int, int)>();
@@ -75,6 +83,9 @@ namespace NetworkService.ViewModel
                 .ToList();
 
         public IEnumerable<(int, int)> Connections => _connections;
+
+        public ObservableCollection<ConnectionLineData> ConnectionLines { get; }
+            = new ObservableCollection<ConnectionLineData>();
 
         public NetworkDisplayViewModel(ObservableCollection<NetworkEntity> entities, Action<Action> pushUndo)
         {
@@ -109,6 +120,18 @@ namespace NetworkService.ViewModel
                 OnPropertyChanged(nameof(EntityGroups));
             });
             OnPropertyChanged(nameof(Connections));
+            UpdateConnectionLines();
+        }
+
+        public void RemoveFromSlot(CanvasSlot slot)
+        {
+            if (slot?.Entity == null) return;
+            var entity = slot.Entity;
+            slot.Entity = null;
+            ClearConnectionsForEntity(entity.ID);
+            OnPropertyChanged(nameof(Connections));
+            UpdateConnectionLines();
+            _pushUndo(() => slot.Entity = entity);
         }
 
         public NetworkEntity GetEntityById(int id)
@@ -139,21 +162,46 @@ namespace NetworkService.ViewModel
             if (_connections.Contains(pair))
             {
                 _connections.Remove(pair);
-                _pushUndo(() => { _connections.Add(pair); OnPropertyChanged(nameof(Connections)); });
+                _pushUndo(() => { _connections.Add(pair); OnPropertyChanged(nameof(Connections)); UpdateConnectionLines(); });
             }
             else
             {
                 _connections.Add(pair);
-                _pushUndo(() => { _connections.Remove(pair); OnPropertyChanged(nameof(Connections)); });
+                _pushUndo(() => { _connections.Remove(pair); OnPropertyChanged(nameof(Connections)); UpdateConnectionLines(); });
             }
             SetConnectingEntityId(null);
             OnPropertyChanged(nameof(Connections));
+            UpdateConnectionLines();
         }
 
         public void ClearConnectionsForEntity(int entityId)
         {
             _connections.RemoveAll(p => p.Item1 == entityId || p.Item2 == entityId);
             OnPropertyChanged(nameof(Connections));
+            UpdateConnectionLines();
+        }
+
+        private void UpdateConnectionLines()
+        {
+            ConnectionLines.Clear();
+            const double cellW = 85.5, cellH = 74.0;
+            foreach (var (idA, idB) in _connections)
+            {
+                int iA = -1, iB = -1;
+                for (int i = 0; i < CanvasSlots.Count; i++)
+                {
+                    if (CanvasSlots[i].Entity?.ID == idA) iA = i;
+                    if (CanvasSlots[i].Entity?.ID == idB) iB = i;
+                }
+                if (iA < 0 || iB < 0) continue;
+                ConnectionLines.Add(new ConnectionLineData
+                {
+                    X1 = (iA % 4) * cellW + cellW / 2,
+                    Y1 = (iA / 4) * cellH + cellH / 2,
+                    X2 = (iB % 4) * cellW + cellW / 2,
+                    Y2 = (iB / 4) * cellH + cellH / 2
+                });
+            }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

@@ -43,7 +43,13 @@ namespace NetworkService.ViewModel
                 try
                 {
                     foreach (var proc in Process.GetProcessesByName("MeteringSimulator"))
-                        try { proc.Kill(); proc.WaitForExit(1000); } catch { }
+                        try
+                        {
+                            proc.CloseMainWindow();
+                            if (!proc.WaitForExit(2000))
+                                proc.Kill();
+                        }
+                        catch { }
                 }
                 catch { }
                 System.Threading.Thread.Sleep(1500);

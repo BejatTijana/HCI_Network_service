@@ -4,31 +4,172 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              mc:Ignorable="d"
-             Background="#1C2833"
-             Loaded="OnLoaded">
+             Background="#1C2833">
     <StackPanel>
         <TextBlock Text="Entity:" FontSize="12" Foreground="#95A5A6" Opacity="0.4"
                    Margin="24,16,0,4"/>
-        <ComboBox ItemsSource="{Binding Entities}"
-                  SelectedItem="{Binding SelectedEntity, Mode=TwoWay}"
-                  DisplayMemberPath="Naziv"
-                  Width="342" Height="36" HorizontalAlignment="Left"
-                  Margin="24,0,0,0" Background="#2C3E50" BorderBrush="#34495E"
-                  Foreground="#ECF0F1" FontSize="13"
-                  Cursor="Hand" ToolTip="Select entity to view graph">
-            <ComboBox.Resources>
-                <SolidColorBrush x:Key="{x:Static SystemColors.WindowBrushKey}" Color="#2C3E50"/>
-                <SolidColorBrush x:Key="{x:Static SystemColors.WindowTextBrushKey}" Color="#ECF0F1"/>
-                <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="#1F618D"/>
-                <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" Color="#ECF0F1"/>
-            </ComboBox.Resources>
-        </ComboBox>
+        <Grid Width="342" Height="36" HorizontalAlignment="Left" Margin="24,0,0,0">
+            <ComboBox ItemsSource="{Binding Entities}"
+                      SelectedItem="{Binding SelectedEntity, Mode=TwoWay}"
+                      DisplayMemberPath="Naziv"
+                      Height="36" MaxDropDownHeight="200"
+                      Cursor="Hand" ToolTip="Select entity to view graph">
+                <ComboBox.Style>
+                    <Style TargetType="ComboBox">
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="ComboBox">
+                                    <Grid>
+                                        <Border Background="#2C3E50" BorderBrush="#34495E" BorderThickness="1">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition/>
+                                                    <ColumnDefinition Width="26"/>
+                                                </Grid.ColumnDefinitions>
+                                                <TextBlock Grid.Column="0" Margin="8,0,4,0"
+                                                           VerticalAlignment="Center"
+                                                           Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=SelectedItem.Naziv}"
+                                                           Foreground="#ECF0F1" FontSize="13"
+                                                           IsHitTestVisible="False"/>
+                                                <TextBlock Grid.Column="1" Text="▾" Foreground="#95A5A6"
+                                                           FontSize="14" HorizontalAlignment="Center"
+                                                           VerticalAlignment="Center" IsHitTestVisible="False"/>
+                                            </Grid>
+                                        </Border>
+                                        <ToggleButton IsChecked="{Binding IsDropDownOpen, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}"
+                                                      Background="Transparent" BorderThickness="0"
+                                                      Focusable="False" Opacity="0"/>
+                                        <Popup IsOpen="{TemplateBinding IsDropDownOpen}"
+                                               Placement="Bottom" AllowsTransparency="True" Focusable="False">
+                                            <Border Background="#2C3E50" BorderBrush="#34495E" BorderThickness="1"
+                                                    MaxHeight="{TemplateBinding MaxDropDownHeight}">
+                                                <ScrollViewer CanContentScroll="True">
+                                                    <ItemsPresenter/>
+                                                </ScrollViewer>
+                                            </Border>
+                                        </Popup>
+                                    </Grid>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </ComboBox.Style>
+                <ComboBox.ItemContainerStyle>
+                    <Style TargetType="ComboBoxItem">
+                        <Setter Property="Foreground" Value="#ECF0F1"/>
+                        <Setter Property="Background" Value="#2C3E50"/>
+                        <Setter Property="FontSize" Value="13"/>
+                        <Setter Property="Padding" Value="8,6"/>
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#1F618D"/>
+                            </Trigger>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter Property="Background" Value="#1F618D"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </ComboBox.ItemContainerStyle>
+            </ComboBox>
+            <TextBlock Text="— Izaberite entitet —"
+                       IsHitTestVisible="False"
+                       Foreground="#7F8C8D" FontSize="13"
+                       VerticalAlignment="Center" Margin="8,0,0,0">
+                <TextBlock.Style>
+                    <Style TargetType="TextBlock">
+                        <Setter Property="Visibility" Value="Collapsed"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding SelectedEntity}" Value="{x:Null}">
+                                <Setter Property="Visibility" Value="Visible"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBlock.Style>
+            </TextBlock>
+        </Grid>
         <TextBlock Text="Last 5 measurements" FontSize="12" Foreground="#95A5A6"
                    Margin="24,12,0,4"/>
         <Border Width="342" Height="200" BorderBrush="#34495E" BorderThickness="1"
                 Background="#1C2833" HorizontalAlignment="Left" Margin="24,0,0,0"
                 ToolTip="Last 5 received measurements">
-            <Canvas x:Name="GraphCanvas" Width="342" Height="200"/>
+            <Grid Width="342" Height="200">
+                <ItemsControl ItemsSource="{Binding DisplayLines}" IsHitTestVisible="False">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <Canvas Width="342" Height="200" IsHitTestVisible="False"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Line X1="{Binding X1}" Y1="{Binding Y1}" X2="{Binding X2}" Y2="{Binding Y2}"
+                                  Stroke="#7F8C8D" StrokeThickness="1" IsHitTestVisible="False"/>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+                <ItemsControl ItemsSource="{Binding DisplayEllipses}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <Canvas Width="342" Height="200"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemContainerStyle>
+                        <Style TargetType="ContentPresenter">
+                            <Setter Property="Canvas.Left" Value="{Binding Left}"/>
+                            <Setter Property="Canvas.Top" Value="{Binding Top}"/>
+                        </Style>
+                    </ItemsControl.ItemContainerStyle>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Grid Width="32" Height="32">
+                                <Ellipse>
+                                    <Ellipse.Style>
+                                        <Style TargetType="Ellipse">
+                                            <Setter Property="Fill" Value="#1E8449"/>
+                                            <Setter Property="Stroke" Value="#27AE60"/>
+                                            <Setter Property="StrokeThickness" Value="1"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsValid}" Value="False">
+                                                    <Setter Property="Fill" Value="#922B21"/>
+                                                    <Setter Property="Stroke" Value="#E74C3C"/>
+                                                    <Setter Property="StrokeThickness" Value="1"/>
+                                                    <Setter Property="StrokeDashArray" Value="4,2"/>
+                                                    <Setter Property="Effect">
+                                                        <Setter.Value>
+                                                            <DropShadowEffect BlurRadius="4" ShadowDepth="2"
+                                                                              Opacity="0.25" Color="Black"/>
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Ellipse.Style>
+                                </Ellipse>
+                                <TextBlock Text="{Binding ValueText}" FontSize="12" Foreground="White"
+                                           HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Grid>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+                <ItemsControl ItemsSource="{Binding DisplayEllipses}" IsHitTestVisible="False">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <Canvas Width="342" Height="200" IsHitTestVisible="False"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemContainerStyle>
+                        <Style TargetType="ContentPresenter">
+                            <Setter Property="Canvas.Left" Value="{Binding Left}"/>
+                            <Setter Property="Canvas.Top" Value="185"/>
+                        </Style>
+                    </ItemsControl.ItemContainerStyle>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding TimeLabel}" Foreground="#95A5A6" FontSize="8"
+                                       Width="32" TextAlignment="Center"/>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </Grid>
         </Border>
         <StackPanel Orientation="Horizontal" Margin="24,8,0,0">
             <TextBlock Text="&#x25CF; Valid (1-5 MW)" FontSize="10" Foreground="#27AE60"/>

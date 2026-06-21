@@ -54,14 +54,64 @@
             <ComboBox ItemsSource="{Binding Types}"
                       SelectedItem="{Binding SelectedType}"
                       DisplayMemberPath="Ime"
-                      Height="36" BorderBrush="#34495E" Foreground="#ECF0F1" Margin="0,8,0,0"
+                      Height="36" Margin="0,8,0,0"
                       Cursor="Hand" ToolTip="Select entity type">
-                <ComboBox.Resources>
-                    <SolidColorBrush x:Key="{x:Static SystemColors.WindowBrushKey}" Color="#2C3E50"/>
-                    <SolidColorBrush x:Key="{x:Static SystemColors.WindowTextBrushKey}" Color="#ECF0F1"/>
-                    <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="#1F618D"/>
-                    <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" Color="#ECF0F1"/>
-                </ComboBox.Resources>
+                <ComboBox.Style>
+                    <Style TargetType="ComboBox">
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="ComboBox">
+                                    <Grid>
+                                        <Border Background="#2C3E50" BorderBrush="#34495E" BorderThickness="1">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition/>
+                                                    <ColumnDefinition Width="26"/>
+                                                </Grid.ColumnDefinitions>
+                                                <TextBlock Grid.Column="0" Margin="8,0,4,0"
+                                                           VerticalAlignment="Center"
+                                                           Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=SelectedItem.Ime}"
+                                                           Foreground="#ECF0F1" FontSize="13"
+                                                           IsHitTestVisible="False"/>
+                                                <TextBlock Grid.Column="1" Text="▾" Foreground="#95A5A6"
+                                                           FontSize="14" HorizontalAlignment="Center"
+                                                           VerticalAlignment="Center" IsHitTestVisible="False"/>
+                                            </Grid>
+                                        </Border>
+                                        <ToggleButton IsChecked="{Binding IsDropDownOpen, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}"
+                                                      Background="Transparent" BorderThickness="0"
+                                                      Focusable="False" Opacity="0"/>
+                                        <Popup IsOpen="{TemplateBinding IsDropDownOpen}"
+                                               Placement="Bottom" AllowsTransparency="True" Focusable="False">
+                                            <Border Background="#2C3E50" BorderBrush="#34495E" BorderThickness="1"
+                                                    MaxHeight="200">
+                                                <ScrollViewer CanContentScroll="True">
+                                                    <ItemsPresenter/>
+                                                </ScrollViewer>
+                                            </Border>
+                                        </Popup>
+                                    </Grid>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </ComboBox.Style>
+                <ComboBox.ItemContainerStyle>
+                    <Style TargetType="ComboBoxItem">
+                        <Setter Property="Foreground" Value="#ECF0F1"/>
+                        <Setter Property="Background" Value="#2C3E50"/>
+                        <Setter Property="FontSize" Value="13"/>
+                        <Setter Property="Padding" Value="8,6"/>
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#1F618D"/>
+                            </Trigger>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter Property="Background" Value="#1F618D"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </ComboBox.ItemContainerStyle>
             </ComboBox>
 
             <TextBlock Text="Virtual keyboard" Foreground="#95A5A6" FontSize="11"
