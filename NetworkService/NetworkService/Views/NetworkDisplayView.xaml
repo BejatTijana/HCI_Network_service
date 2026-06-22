@@ -29,6 +29,12 @@
                     <SolidColorBrush x:Key="{x:Static SystemColors.ControlBrushKey}" Color="#1C2833"/>
                     <SolidColorBrush x:Key="{x:Static SystemColors.WindowBrushKey}" Color="#1C2833"/>
                 </TreeView.Resources>
+                <TreeView.ItemContainerStyle>
+                    <Style TargetType="TreeViewItem">
+                        <Setter Property="IsExpanded" Value="True"/>
+                        <Setter Property="Foreground" Value="#ECF0F1"/>
+                    </Style>
+                </TreeView.ItemContainerStyle>
                 <TreeView.ItemTemplate>
                     <HierarchicalDataTemplate ItemsSource="{Binding Entities}">
                         <HierarchicalDataTemplate.ItemTemplate>
@@ -120,7 +126,7 @@
                                     <Setter Property="BorderBrush" Value="Transparent"/>
                                     <Style.Triggers>
                                         <DataTrigger Binding="{Binding IsSelectedForConnection}" Value="True">
-                                            <Setter Property="BorderBrush" Value="#3355FF"/>
+                                            <Setter Property="BorderBrush" Value="#F39C12"/>
                                         </DataTrigger>
                                     </Style.Triggers>
                                 </Style>
@@ -139,7 +145,9 @@
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <Line X1="{Binding X1}" Y1="{Binding Y1}" X2="{Binding X2}" Y2="{Binding Y2}"
-                          Stroke="#7F8C8D" StrokeThickness="2" IsHitTestVisible="False"/>
+                          Stroke="#2ECC71" StrokeThickness="2.5"
+                          StrokeStartLineCap="Round" StrokeEndLineCap="Round"
+                          IsHitTestVisible="False"/>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>

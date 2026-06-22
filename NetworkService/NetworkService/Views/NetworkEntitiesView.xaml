@@ -66,7 +66,7 @@
                   Background="#1C2833" BorderBrush="#34495E" BorderThickness="1"
                   ToolTip="Select entity to delete or view">
             <ListView.Resources>
-                <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="#1F618D"/>
+                <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="#1E8449"/>
                 <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" Color="#ECF0F1"/>
                 <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}" Color="#2C3E50"/>
                 <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightTextBrushKey}" Color="#ECF0F1"/>
@@ -107,7 +107,7 @@
                                         <Setter TargetName="bd" Property="Background" Value="#253545"/>
                                     </Trigger>
                                     <Trigger Property="IsSelected" Value="True">
-                                        <Setter TargetName="bd" Property="Background" Value="#1F618D"/>
+                                        <Setter TargetName="bd" Property="Background" Value="#1E8449"/>
                                     </Trigger>
                                     <MultiTrigger>
                                         <MultiTrigger.Conditions>
@@ -125,7 +125,7 @@
                             <Setter Property="Background" Value="#253545"/>
                         </Trigger>
                         <Trigger Property="IsSelected" Value="True">
-                            <Setter Property="Background" Value="#1F618D"/>
+                            <Setter Property="Background" Value="#1E8449"/>
                         </Trigger>
                     </Style.Triggers>
                 </Style>
@@ -146,8 +146,8 @@
                     ToolTip="Add new entity"/>
             <Button Grid.Column="2" Content="Delete" Height="44"
                     Command="{Binding DeleteCommand}"
-                    Background="#34495E" Foreground="#ECF0F1"
-                    FontSize="14" BorderBrush="#34495E" Cursor="Hand"
+                    Background="#C0392B" Foreground="#ECF0F1"
+                    FontSize="14" BorderBrush="#C0392B" Cursor="Hand"
                     ToolTip="Delete selected entity"/>
         </Grid>
 

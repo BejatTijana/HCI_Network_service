@@ -51,7 +51,7 @@
             </Grid>
         </Border>
         <!-- Title bar -->
-        <Border DockPanel.Dock="Top" Height="48" Background="#17202A">
+        <Border DockPanel.Dock="Top" Height="48" Background="#1A3A2A">
             <Grid>
                 <TextBlock Text="{Binding ViewTitle}"
                            Foreground="#ECF0F1" FontSize="16"
@@ -71,7 +71,7 @@
             </Grid>
         </Border>
         <!-- Bottom nav bar -->
-        <Border DockPanel.Dock="Bottom" Height="56" Background="#17202A">
+        <Border DockPanel.Dock="Bottom" Height="56" Background="#1A3A2A">
             <UniformGrid Columns="3">
                 <Button Content="Home"
                         Command="{Binding NavigateHomeCommand}"

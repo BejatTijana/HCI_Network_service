@@ -67,8 +67,9 @@
                 <Button Content="K" Style="{StaticResource KeyButton}" Click="OnKeyClick"/>
                 <Button Content="L" Style="{StaticResource KeyButton}" Click="OnKeyClick"/>
             </UniformGrid>
-            <!-- Row 3: Z X C V B N M ⌫ -->
-            <UniformGrid Grid.Row="3" Rows="1" Columns="8">
+            <!-- Row 3: ⇧ Z X C V B N M ⌫ -->
+            <UniformGrid Grid.Row="3" Rows="1" Columns="9">
+                <Button x:Name="ShiftButton" Content="⇧" Style="{StaticResource KeyButton}" Click="OnKeyClick"/>
                 <Button Content="Z" Style="{StaticResource KeyButton}" Click="OnKeyClick"/>
                 <Button Content="X" Style="{StaticResource KeyButton}" Click="OnKeyClick"/>
                 <Button Content="C" Style="{StaticResource KeyButton}" Click="OnKeyClick"/>
