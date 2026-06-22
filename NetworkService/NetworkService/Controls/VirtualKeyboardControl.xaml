@@ -20,16 +20,30 @@
             </Setter>
         </Style>
     </UserControl.Resources>
-    <Border Background="#CC1C2833" Width="342" Height="180">
+    <Border Background="#CC1C2833" Width="342" Height="216">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition/>
                 <RowDefinition/>
                 <RowDefinition/>
                 <RowDefinition/>
+                <RowDefinition/>
             </Grid.RowDefinitions>
-            <!-- Row 1: Q W E R T Y U I O P -->
+            <!-- Row 0: 1 2 3 4 5 6 7 8 9 0 -->
             <UniformGrid Grid.Row="0" Rows="1" Columns="10">
+                <Button Content="1" Style="{StaticResource KeyButton}" Click="OnKeyClick"/>
+                <Button Content="2" Style="{StaticResource KeyButton}" Click="OnKeyClick"/>
+                <Button Content="3" Style="{StaticResource KeyButton}" Click="OnKeyClick"/>
+                <Button Content="4" Style="{StaticResource KeyButton}" Click="OnKeyClick"/>
+                <Button Content="5" Style="{StaticResource KeyButton}" Click="OnKeyClick"/>
+                <Button Content="6" Style="{StaticResource KeyButton}" Click="OnKeyClick"/>
+                <Button Content="7" Style="{StaticResource KeyButton}" Click="OnKeyClick"/>
+                <Button Content="8" Style="{StaticResource KeyButton}" Click="OnKeyClick"/>
+                <Button Content="9" Style="{StaticResource KeyButton}" Click="OnKeyClick"/>
+                <Button Content="0" Style="{StaticResource KeyButton}" Click="OnKeyClick"/>
+            </UniformGrid>
+            <!-- Row 1: Q W E R T Y U I O P -->
+            <UniformGrid Grid.Row="1" Rows="1" Columns="10">
                 <Button Content="Q" Style="{StaticResource KeyButton}" Click="OnKeyClick"/>
                 <Button Content="W" Style="{StaticResource KeyButton}" Click="OnKeyClick"/>
                 <Button Content="E" Style="{StaticResource KeyButton}" Click="OnKeyClick"/>
@@ -42,7 +56,7 @@
                 <Button Content="P" Style="{StaticResource KeyButton}" Click="OnKeyClick"/>
             </UniformGrid>
             <!-- Row 2: A S D F G H J K L -->
-            <UniformGrid Grid.Row="1" Rows="1" Columns="9">
+            <UniformGrid Grid.Row="2" Rows="1" Columns="9">
                 <Button Content="A" Style="{StaticResource KeyButton}" Click="OnKeyClick"/>
                 <Button Content="S" Style="{StaticResource KeyButton}" Click="OnKeyClick"/>
                 <Button Content="D" Style="{StaticResource KeyButton}" Click="OnKeyClick"/>
@@ -54,7 +68,7 @@
                 <Button Content="L" Style="{StaticResource KeyButton}" Click="OnKeyClick"/>
             </UniformGrid>
             <!-- Row 3: Z X C V B N M ⌫ -->
-            <UniformGrid Grid.Row="2" Rows="1" Columns="8">
+            <UniformGrid Grid.Row="3" Rows="1" Columns="8">
                 <Button Content="Z" Style="{StaticResource KeyButton}" Click="OnKeyClick"/>
                 <Button Content="X" Style="{StaticResource KeyButton}" Click="OnKeyClick"/>
                 <Button Content="C" Style="{StaticResource KeyButton}" Click="OnKeyClick"/>
@@ -64,18 +78,15 @@
                 <Button Content="M" Style="{StaticResource KeyButton}" Click="OnKeyClick"/>
                 <Button Content="&#x232B;" Style="{StaticResource KeyButton}" Click="OnKeyClick"/>
             </UniformGrid>
-            <!-- Row 4: 123  space  ↵ -->
-            <Grid Grid.Row="3">
+            <!-- Row 4: space  ↵ -->
+            <Grid Grid.Row="4">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                <Button Grid.Column="0" Content="123" Style="{StaticResource KeyButton}"
-                        Click="OnKeyClick" Padding="12,0"/>
-                <Button Grid.Column="1" Content="space" Style="{StaticResource KeyButton}"
+                <Button Grid.Column="0" Content="space" Style="{StaticResource KeyButton}"
                         Click="OnKeyClick"/>
-                <Button Grid.Column="2" Content="&#x21B5;" Style="{StaticResource KeyButton}"
+                <Button Grid.Column="1" Content="&#x21B5;" Style="{StaticResource KeyButton}"
                         Click="OnKeyClick" Padding="12,0"/>
             </Grid>
         </Grid>
