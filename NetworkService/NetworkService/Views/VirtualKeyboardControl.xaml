@@ -1,0 +1,101 @@
+<UserControl x:Class="NetworkService.Views.VirtualKeyboardControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:vm="clr-namespace:NetworkService.ViewModel"
+             mc:Ignorable="d">
+    <UserControl.Resources>
+        <Style x:Key="KeyButton" TargetType="Button">
+            <Setter Property="FontSize" Value="18"/>
+            <Setter Property="Foreground" Value="#ECF0F1"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+    <UserControl.DataContext>
+        <vm:VirtualKeyboardViewModel/>
+    </UserControl.DataContext>
+    <Border Background="#CC1C2833" Width="342" Height="216">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <!-- Row 0: 1 2 3 4 5 6 7 8 9 0 -->
+            <UniformGrid Grid.Row="0" Rows="1" Columns="10">
+                <Button Content="1" Style="{StaticResource KeyButton}" Command="{Binding KeyPressCommand}" CommandParameter="{Binding Content, RelativeSource={RelativeSource Self}}"/>
+                <Button Content="2" Style="{StaticResource KeyButton}" Command="{Binding KeyPressCommand}" CommandParameter="{Binding Content, RelativeSource={RelativeSource Self}}"/>
+                <Button Content="3" Style="{StaticResource KeyButton}" Command="{Binding KeyPressCommand}" CommandParameter="{Binding Content, RelativeSource={RelativeSource Self}}"/>
+                <Button Content="4" Style="{StaticResource KeyButton}" Command="{Binding KeyPressCommand}" CommandParameter="{Binding Content, RelativeSource={RelativeSource Self}}"/>
+                <Button Content="5" Style="{StaticResource KeyButton}" Command="{Binding KeyPressCommand}" CommandParameter="{Binding Content, RelativeSource={RelativeSource Self}}"/>
+                <Button Content="6" Style="{StaticResource KeyButton}" Command="{Binding KeyPressCommand}" CommandParameter="{Binding Content, RelativeSource={RelativeSource Self}}"/>
+                <Button Content="7" Style="{StaticResource KeyButton}" Command="{Binding KeyPressCommand}" CommandParameter="{Binding Content, RelativeSource={RelativeSource Self}}"/>
+                <Button Content="8" Style="{StaticResource KeyButton}" Command="{Binding KeyPressCommand}" CommandParameter="{Binding Content, RelativeSource={RelativeSource Self}}"/>
+                <Button Content="9" Style="{StaticResource KeyButton}" Command="{Binding KeyPressCommand}" CommandParameter="{Binding Content, RelativeSource={RelativeSource Self}}"/>
+                <Button Content="0" Style="{StaticResource KeyButton}" Command="{Binding KeyPressCommand}" CommandParameter="{Binding Content, RelativeSource={RelativeSource Self}}"/>
+            </UniformGrid>
+            <!-- Row 1: Q W E R T Y U I O P -->
+            <UniformGrid Grid.Row="1" Rows="1" Columns="10">
+                <Button Content="Q" Style="{StaticResource KeyButton}" Command="{Binding KeyPressCommand}" CommandParameter="{Binding Content, RelativeSource={RelativeSource Self}}"/>
+                <Button Content="W" Style="{StaticResource KeyButton}" Command="{Binding KeyPressCommand}" CommandParameter="{Binding Content, RelativeSource={RelativeSource Self}}"/>
+                <Button Content="E" Style="{StaticResource KeyButton}" Command="{Binding KeyPressCommand}" CommandParameter="{Binding Content, RelativeSource={RelativeSource Self}}"/>
+                <Button Content="R" Style="{StaticResource KeyButton}" Command="{Binding KeyPressCommand}" CommandParameter="{Binding Content, RelativeSource={RelativeSource Self}}"/>
+                <Button Content="T" Style="{StaticResource KeyButton}" Command="{Binding KeyPressCommand}" CommandParameter="{Binding Content, RelativeSource={RelativeSource Self}}"/>
+                <Button Content="Y" Style="{StaticResource KeyButton}" Command="{Binding KeyPressCommand}" CommandParameter="{Binding Content, RelativeSource={RelativeSource Self}}"/>
+                <Button Content="U" Style="{StaticResource KeyButton}" Command="{Binding KeyPressCommand}" CommandParameter="{Binding Content, RelativeSource={RelativeSource Self}}"/>
+                <Button Content="I" Style="{StaticResource KeyButton}" Command="{Binding KeyPressCommand}" CommandParameter="{Binding Content, RelativeSource={RelativeSource Self}}"/>
+                <Button Content="O" Style="{StaticResource KeyButton}" Command="{Binding KeyPressCommand}" CommandParameter="{Binding Content, RelativeSource={RelativeSource Self}}"/>
+                <Button Content="P" Style="{StaticResource KeyButton}" Command="{Binding KeyPressCommand}" CommandParameter="{Binding Content, RelativeSource={RelativeSource Self}}"/>
+            </UniformGrid>
+            <!-- Row 2: A S D F G H J K L -->
+            <UniformGrid Grid.Row="2" Rows="1" Columns="9">
+                <Button Content="A" Style="{StaticResource KeyButton}" Command="{Binding KeyPressCommand}" CommandParameter="{Binding Content, RelativeSource={RelativeSource Self}}"/>
+                <Button Content="S" Style="{StaticResource KeyButton}" Command="{Binding KeyPressCommand}" CommandParameter="{Binding Content, RelativeSource={RelativeSource Self}}"/>
+                <Button Content="D" Style="{StaticResource KeyButton}" Command="{Binding KeyPressCommand}" CommandParameter="{Binding Content, RelativeSource={RelativeSource Self}}"/>
+                <Button Content="F" Style="{StaticResource KeyButton}" Command="{Binding KeyPressCommand}" CommandParameter="{Binding Content, RelativeSource={RelativeSource Self}}"/>
+                <Button Content="G" Style="{StaticResource KeyButton}" Command="{Binding KeyPressCommand}" CommandParameter="{Binding Content, RelativeSource={RelativeSource Self}}"/>
+                <Button Content="H" Style="{StaticResource KeyButton}" Command="{Binding KeyPressCommand}" CommandParameter="{Binding Content, RelativeSource={RelativeSource Self}}"/>
+                <Button Content="J" Style="{StaticResource KeyButton}" Command="{Binding KeyPressCommand}" CommandParameter="{Binding Content, RelativeSource={RelativeSource Self}}"/>
+                <Button Content="K" Style="{StaticResource KeyButton}" Command="{Binding KeyPressCommand}" CommandParameter="{Binding Content, RelativeSource={RelativeSource Self}}"/>
+                <Button Content="L" Style="{StaticResource KeyButton}" Command="{Binding KeyPressCommand}" CommandParameter="{Binding Content, RelativeSource={RelativeSource Self}}"/>
+            </UniformGrid>
+            <!-- Row 3: ⇧ Z X C V B N M ⌫ -->
+            <UniformGrid Grid.Row="3" Rows="1" Columns="9">
+                <Button Content="⇧" Style="{StaticResource KeyButton}"
+                        Command="{Binding KeyPressCommand}" CommandParameter="SHIFT"
+                        Foreground="{Binding ShiftForeground}"/>
+                <Button Content="Z" Style="{StaticResource KeyButton}" Command="{Binding KeyPressCommand}" CommandParameter="{Binding Content, RelativeSource={RelativeSource Self}}"/>
+                <Button Content="X" Style="{StaticResource KeyButton}" Command="{Binding KeyPressCommand}" CommandParameter="{Binding Content, RelativeSource={RelativeSource Self}}"/>
+                <Button Content="C" Style="{StaticResource KeyButton}" Command="{Binding KeyPressCommand}" CommandParameter="{Binding Content, RelativeSource={RelativeSource Self}}"/>
+                <Button Content="V" Style="{StaticResource KeyButton}" Command="{Binding KeyPressCommand}" CommandParameter="{Binding Content, RelativeSource={RelativeSource Self}}"/>
+                <Button Content="B" Style="{StaticResource KeyButton}" Command="{Binding KeyPressCommand}" CommandParameter="{Binding Content, RelativeSource={RelativeSource Self}}"/>
+                <Button Content="N" Style="{StaticResource KeyButton}" Command="{Binding KeyPressCommand}" CommandParameter="{Binding Content, RelativeSource={RelativeSource Self}}"/>
+                <Button Content="M" Style="{StaticResource KeyButton}" Command="{Binding KeyPressCommand}" CommandParameter="{Binding Content, RelativeSource={RelativeSource Self}}"/>
+                <Button Content="&#x232B;" Style="{StaticResource KeyButton}" Command="{Binding KeyPressCommand}" CommandParameter="{Binding Content, RelativeSource={RelativeSource Self}}"/>
+            </UniformGrid>
+            <!-- Row 4: space  ↵ -->
+            <Grid Grid.Row="4">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <Button Grid.Column="0" Content="space" Style="{StaticResource KeyButton}"
+                        Command="{Binding KeyPressCommand}" CommandParameter="{Binding Content, RelativeSource={RelativeSource Self}}"/>
+                <Button Grid.Column="1" Content="&#x21B5;" Style="{StaticResource KeyButton}"
+                        Command="{Binding KeyPressCommand}" CommandParameter="{Binding Content, RelativeSource={RelativeSource Self}}" Padding="12,0"/>
+            </Grid>
+        </Grid>
+    </Border>
+</UserControl>

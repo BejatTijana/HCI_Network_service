@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:vm="clr-namespace:NetworkService.ViewModel"
              mc:Ignorable="d"
              Background="#1C2833">
     <UserControl.Resources>
@@ -14,13 +15,11 @@
         <Border Width="342" Height="120" BorderBrush="#34495E" BorderThickness="1"
                 Background="#2C3E50" HorizontalAlignment="Left" Margin="24,0,0,0"
                 AllowDrop="True"
-                Drop="TV_Drop"
-                DragOver="TV_AreaDragOver">
+                vm:DragBehaviorAttacher.IsTVAreaDrop="True">
             <TreeView ItemsSource="{Binding EntityGroups}"
                       BorderThickness="0" Background="Transparent"
                       Cursor="Hand" ToolTip="Drag entity to place it on the grid"
-                      PreviewMouseLeftButtonDown="TV_PreviewMouseDown"
-                      MouseMove="TV_MouseMove">
+                      vm:DragBehaviorAttacher.IsTreeViewDrag="True">
                 <TreeView.Resources>
                     <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="#1F618D"/>
                     <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" Color="#ECF0F1"/>
@@ -62,12 +61,8 @@
                 <DataTemplate>
                     <Grid Width="76" Height="70" Margin="2"
                           AllowDrop="True"
-                          Drop="Slot_Drop"
-                          DragOver="Slot_DragOver"
-                          PreviewMouseLeftButtonDown="Slot_PreviewMouseDown"
-                          MouseMove="Slot_SlotMouseMove"
-                          MouseLeftButtonUp="Slot_MouseUp"
-                          ToolTip="{Binding DisplayText}">
+                          ToolTip="{Binding DisplayText}"
+                          vm:DragBehaviorAttacher.IsSlotInteraction="True">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="36"/>
                             <RowDefinition Height="*"/>

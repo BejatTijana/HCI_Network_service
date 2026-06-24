@@ -3,7 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:controls="clr-namespace:NetworkService.Controls"
+             xmlns:views="clr-namespace:NetworkService.Views"
+             xmlns:vm="clr-namespace:NetworkService.ViewModel"
              mc:Ignorable="d"
              Background="#1C2833">
     <UserControl.Resources>
@@ -116,7 +117,7 @@
 
             <TextBlock Text="Virtual keyboard" Foreground="#95A5A6" FontSize="11"
                        Margin="0,24,0,4"/>
-            <controls:VirtualKeyboardControl TargetTextBox="{Binding ElementName=nameTB}"/>
+            <views:VirtualKeyboardControl vm:VirtualKeyboardAttacher.TargetTextBox="{Binding ElementName=nameTB}"/>
         </StackPanel>
 
         <!-- Buttons -->

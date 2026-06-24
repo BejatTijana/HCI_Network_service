@@ -62,6 +62,8 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Commands\RelayCommand.cs" />
+    <Compile Include="ViewModel\NetworkDisplayDragHandlers.cs" />
+    <Compile Include="ViewModel\VirtualKeyboardViewModel.cs" />
     <Compile Include="Model\EntityType.cs" />
     <Compile Include="Model\NetworkEntity.cs" />
     <Compile Include="ViewModel\MainWindowViewModel.cs" />
@@ -69,7 +71,7 @@
     <Compile Include="ViewModel\NetworkEntitiesViewModel.cs" />
     <Compile Include="ViewModel\NetworkDisplayViewModel.cs" />
     <Compile Include="ViewModel\MeasurementGraphViewModel.cs" />
-    <Compile Include="Controls\VirtualKeyboardControl.xaml.cs">
+    <Compile Include="Views\VirtualKeyboardControl.xaml.cs">
       <DependentUpon>VirtualKeyboardControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\AddEntityView.xaml.cs">
@@ -95,7 +97,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Controls\VirtualKeyboardControl.xaml">
+    <Page Include="Views\VirtualKeyboardControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -163,7 +165,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Commands\" />
-    <Folder Include="Controls\" />
     <Folder Include="Model\" />
     <Folder Include="Resources\" />
     <Folder Include="Resources\Images\" />

@@ -13,7 +13,7 @@ namespace NetworkService.Model
 
         public static readonly EntityType Vetrogenerator = new EntityType
         {
-            Ime = "Vetrogenerator",
+            Ime = "Vjetrogenerator",
             Slika = "/Resources/Images/Vetrogenerator.png"
         };
     }
