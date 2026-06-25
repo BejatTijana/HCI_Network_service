@@ -129,7 +129,7 @@ Centralni ViewModel cijele aplikacije. Upravlja navigacijom između pogleda, TCP
 - `NavigateToEntitiesCommand` — aktivira `NetworkEntitiesViewModel`, postavlja naslov "Network Entities".
 - `NavigateToDisplayCommand` — aktivira `NetworkDisplayViewModel`, postavlja naslov "Network Display".
 - `NavigateToGraphCommand` — aktivira `MeasurementGraphViewModel`, postavlja naslov "Graph view".
-- `NavigateBackCommand` — pametna navigacija unazad: ako je aktivan `AddEntityViewModel`, ide na Entities; inače ide na Home. Implementirano type-check lancem.
+- `NavigateBackCommand` — pametna navigacija unazad: vraća na prethodni view koji je zapamćen u `_navBackVM`/`_navBackTitle`/`_navBackShowBack` trojci. Ako prethodni view nije zapamćen, ide na Home. Na taj način dupli klik na entitet u NetworkEntities → Graf → Back vas vraća na NetworkEntities, a ne na Home.
 - `UndoCommand` — uzima vrh undo steka i poziva ga. `canExecute` predikat provjerava da li je stek prazan — WPF automatski sivi dugme kada nema šta poništiti.
 
 **Konstruktor**
@@ -144,19 +144,21 @@ Kreira tri unaprijed definisana entiteta (za odbranu):
 - Vetrogenerator 1, vrijednost 4.8 MW (validna)
 - Solarni panel 2, vrijednost 0.5 MW (nije validna — prikazuje se crveno)
 
-**`RestartMeteringSimulator()`**
+**`RestartMeteringSimulator(Action<string, string> showToast = null)`**
 
-Statična metoda koja se poziva nakon dodavanja ili brisanja entiteta, jer simulator treba da zna novi broj entiteta.
+Statična metoda koja se poziva nakon dodavanja ili brisanja entiteta, jer simulator treba da zna novi broj entiteta. Prima opcionalni `showToast` callback za feedback korisniku.
 
 Logika:
-1. Pokreće se na `Task.Run()` (background thread) da ne blokira UI nit.
-2. Pronalazi sve procese sa imenom "MeteringSimulator" i pokušava ih zaustaviti:
+1. Odmah na UI niti prikazuje toast "Restartuje se..." — korisnik dobija feedback da se nešto dešava.
+2. Pokreće se na `Task.Run()` (background thread) da ne blokira UI nit.
+3. Pronalazi sve procese sa imenom "MeteringSimulator" i pokušava ih zaustaviti:
    - Prvo šalje `CloseMainWindow()` (čist izlaz),
    - Čeka maksimalno 2000ms sa `WaitForExit(2000)`,
    - Ako ne stane, poziva `Kill()` (prisilno gašenje).
-3. Čeka 1500ms (`Thread.Sleep`) da OS oslobodi portove i handlje.
-4. Pokreće simulator putem `cmd.exe /c start "" "<putanja>"` — direktno pokretanje exe-a ne radi zbog Windows UAC i path restrikcija.
-5. Loguje svaki korak u `restart.log` u istom folderu kao simulator — korisno za dijagnostiku ako restart ne uspije.
+4. Čeka 1500ms (`Thread.Sleep`) da OS oslobodi portove i handlje.
+5. Pokreće simulator putem `cmd.exe /c start "" "<putanja>"` — direktno pokretanje exe-a ne radi zbog Windows UAC i path restrikcija.
+6. Nakon uspješnog pokretanja, putem `Dispatcher.Invoke` prikazuje toast "Simulator je pokrenut" na UI niti.
+7. Loguje svaki korak u `restart.log` u istom folderu kao simulator — korisno za dijagnostiku ako restart ne uspije.
 
 **`createListener()`**
 
@@ -184,6 +186,7 @@ Upravlja prikazom tabele entiteta, pretragom i brisanjem.
 
 - `ObservableCollection<NetworkEntity> _source` — referenca na glavnu kolekciju iz `MainWindowViewModel`. Prati promjene (add/remove) putem `CollectionChanged` eventa.
 - `Action _navigateToAdd` — callback za navigaciju na Add Entity ekran. Injektiran iz `MainWindowViewModel`.
+- `Action<NetworkEntity> _navigateToGraph` — callback za navigaciju na Graf sa konkretnim entitetom. Prima `NetworkEntity` koji treba biti selektovan na grafu čim se otvori. Injektiran iz `MainWindowViewModel`.
 - `Func<string, bool> _confirmDelete` — callback koji otvara `ConfirmDeleteDialog` i vraća `true`/`false`.
 - `Action<string, string> _showToast` — callback za toast notifikacije.
 - `Action _restartSimulator` — callback za restart MeteringSimulatora.
@@ -195,7 +198,11 @@ Upravlja prikazom tabele entiteta, pretragom i brisanjem.
 - `ObservableCollection<NetworkEntity> FilteredEntities` — kolekcija koja se prikazuje u `ListView`. Uvijek se ponovo gradi iz `_source` sa `ApplyFilter()`.
 - `string SearchText` — tekst iz search TextBox-a. Svaka promjena poziva `ApplyFilter()`.
 - `bool SearchByName` / `bool SearchByType` — RadioButton bindingovi. Postavljanje jednog automatski postavlja drugi na `false` i poziva `ApplyFilter()`.
-- `NetworkEntity SelectedEntity` — odabrani red u `ListView`. Komanda `DeleteCommand` ima `canExecute` koji provjerava da li je ovaj property null.
+- `NetworkEntity SelectedEntity` — odabrani red u `ListView`. Komande `DeleteCommand` i `NavigateToGraphCommand` imaju `canExecute` koji provjeravaju da li je ovaj property null.
+
+**Komande**
+
+- `NavigateToGraphCommand` — poziva `_navigateToGraph(SelectedEntity)`. Navigira na Graf i odmah selektuje kliknuti entitet na grafikonu. `canExecute` vraća `false` dok ništa nije selektovano. Aktivira se duplim klikom na red u ListView-u putem `ListViewDoubleClickBehavior` attached propertija.
 
 **Metode**
 
@@ -226,12 +233,14 @@ ViewModel za formu dodavanja novog entiteta.
 - `string Naziv` — binding na TextBox za ime. Svaka promjena briše `NazivError`.
 - `string NazivError` — poruka greške koja se prikazuje ispod TextBox-a kada validacija ne prođe.
 - `bool ShowNazivError` — computed: `true` ako `NazivError` nije prazno. Koristi se sa `BooleanToVisibilityConverter` u XAML-u.
+- `string TypError` — poruka greške ispod ComboBox-a kada tip nije odabran.
+- `bool ShowTypError` — computed: `true` ako `TypError` nije prazno.
 - `List<EntityType> Types` — fiksna lista `{ SolarniPanel, Vetrogenerator }` za ComboBox.
-- `EntityType SelectedType` — odabrani tip u ComboBox-u. Default je `SolarniPanel`.
+- `EntityType SelectedType` — odabrani tip u ComboBox-u. Default je `null` — korisnik mora eksplicitno odabrati tip. Svaka promjena briše `TypError`.
 
 **`SaveCommand`**
 
-1. Validira da `Naziv` nije prazan ili whitespace — ako jeste, postavlja `NazivError = "Name* is required"` i prekida.
+1. Validira **oba polja istovremeno** koristeći `bool valid = true` pattern — ako `Naziv` prazan, postavlja `NazivError` i `valid = false`; ako `SelectedType == null`, postavlja `TypError` i `valid = false`. Ako `!valid`, prekida. Oba errora se prikazuju odjednom, a ne jedan po jedan.
 2. Kreira novi `NetworkEntity` sa sledećim ID-em, unesenim imenom i odabranim tipom.
 3. Dodaje entitet u `_entities` (shared kolekcija iz `MainWindowViewModel`).
 4. Prikazuje toast notifikaciju.
@@ -420,6 +429,16 @@ Attached properties koji aktiviraju gore navedene behaviour klase direktno iz XA
 
 Razlog za ovaj pattern umjesto `Behavior<T>` iz `Microsoft.Xaml.Behaviors`: `Microsoft.Xaml.Behaviors` biblioteka je dio projekta (dodata kao zavisnost od `Notification.Wpf`), ali njeno korišćenje u XAML-u (`<b:Interaction.Behaviors>`) izaziva BAML kompajlerske greške u `_wpftmp.csproj` (MC3074, CS0234). Custom attached property pattern postiže isti efekat bez te zavisnosti.
 
+**`ListViewDoubleClickBehavior` (statična klasa)**
+
+Attached property koji omogućuje vezivanje komande na `MouseDoubleClick` event `ListView`-a iz čistog XAML-a.
+
+- `CommandProperty` — `DependencyProperty` tipa `ICommand`. Kada se postavi na `ListView`, subscribuje se na `MouseDoubleClick` event.
+- `OnCommandChanged(...)` — callback koji sub/unsub-uje event handler kada se property postavi ili promijeni.
+- `OnDoubleClick(...)` — handler koji poziva komandu ako `CanExecute` vrati `true`.
+
+**Zašto nije `InputBindings`/`MouseBinding`:** U WPF-u, `ListViewItem` konzumira mouse event prije nego što se propagira do `ListView`-a, pa `MouseBinding` na `ListView.InputBindings` nikad ne dobija double-click. Ovaj behavior se subscribuje direktno na `ListView.MouseDoubleClick` event koji se propagira ispravno.
+
 ---
 
 ## Views/
@@ -474,7 +493,7 @@ Prikazuje tabelu svih entiteta sa pretragom, dugmadima za dodavanje/brisanje i v
 - **RadioButtons** (`SearchByName`, `SearchByType`) — dvije opcije pretrage.
 - **TextBox** (`x:Name="searchTB"`) — polje pretrage bind-ovano na `SearchText`.
 - **X dugme** — briše tekst pretrage (`ClearSearchCommand`).
-- **ListView** (`ItemsSource="{Binding FilteredEntities}"`) — prikazuje entitete sa kolonama ID, Name, Type, MW. `AlternationCount=2` za naizmjenične boje redova. Sistemske boje selekcije prepisane su putem `Resources` da bi odgovarale tamnoj temi.
+- **ListView** (`ItemsSource="{Binding FilteredEntities}"`) — prikazuje entitete sa kolonama ID, Name, Type, MW. `AlternationCount=2` za naizmjenične boje redova. Sistemske boje selekcije prepisane su putem `Resources` da bi odgovarale tamnoj temi. `vm:ListViewDoubleClickBehavior.Command="{Binding NavigateToGraphCommand}"` omogućuje navigaciju na Graf duplim klikom na red.
 - **Add dugme** (zeleno) — navigira na Add Entity formu.
 - **Delete dugme** (crveno) — otvara dijalog za potvrdu; aktivan samo kada je odabran red.
 - **VirtualKeyboardControl** — uvijek vidljiva ispod tabele; bind-ovana na `searchTB`.

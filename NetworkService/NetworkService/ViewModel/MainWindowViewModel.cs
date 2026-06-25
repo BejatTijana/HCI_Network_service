@@ -27,6 +27,9 @@ namespace NetworkService.ViewModel
         private readonly HomeViewModel _homeViewModel;
         private string _viewTitle = "DER MONITOR";
         private bool _showBackButton;
+        private object _navBackVM;
+        private string _navBackTitle;
+        private bool _navBackShowBack;
         private NetworkEntitiesViewModel _networkEntitiesViewModel;
         private AddEntityViewModel _addEntityViewModel;
         private NetworkDisplayViewModel _networkDisplayViewModel;
@@ -36,8 +39,11 @@ namespace NetworkService.ViewModel
         private const string SimulatorPath =
             @"C:\Users\tijana\OneDrive\Documents\GitHub\HCI\MeteringSimulator\MeteringSimulator\bin\Debug\MeteringSimulator.exe";
 
-        private static void RestartMeteringSimulator()
+        private static void RestartMeteringSimulator(Action<string, string> showToast = null)
         {
+            Application.Current.Dispatcher.Invoke(() =>
+                showToast?.Invoke("Simulator", "Restartuje se..."));
+
             System.Threading.Tasks.Task.Run(() =>
             {
                 try
@@ -67,6 +73,8 @@ namespace NetworkService.ViewModel
                     });
                     System.IO.File.AppendAllText(logPath,
                         $"[{DateTime.Now:HH:mm:ss}] cmd.exe started: PID {p?.Id}\n");
+                    Application.Current.Dispatcher.Invoke(() =>
+                        showToast?.Invoke("Simulator", "Simulator je pokrenut"));
                 }
                 catch (Exception ex)
                 {
@@ -147,7 +155,7 @@ namespace NetworkService.ViewModel
                     ShowBackButton = true;
                 },
                 showToast,
-                () => RestartMeteringSimulator(),
+                () => RestartMeteringSimulator(showToast),
                 pushUndoForEntities);
 
             _networkEntitiesViewModel = new NetworkEntitiesViewModel(Entities,
@@ -157,6 +165,16 @@ namespace NetworkService.ViewModel
                     ViewTitle = "Add Entity";
                     ShowBackButton = true;
                 },
+                entity =>
+                {
+                    _navBackVM = CurrentViewModel;
+                    _navBackTitle = ViewTitle;
+                    _navBackShowBack = ShowBackButton;
+                    _measurementGraphViewModel.SelectedEntity = entity;
+                    CurrentViewModel = _measurementGraphViewModel;
+                    ViewTitle = "Measurement Graph";
+                    ShowBackButton = true;
+                },
                 name =>
                 {
                     var d = new ConfirmDeleteDialog(name);
@@ -164,7 +182,7 @@ namespace NetworkService.ViewModel
                     return d.ShowDialog() == true;
                 },
                 showToast,
-                () => RestartMeteringSimulator(),
+                () => RestartMeteringSimulator(showToast),
                 pushUndoForEntities);
 
             _networkDisplayViewModel = new NetworkDisplayViewModel(Entities, pushUndoForDisplay);
@@ -197,6 +215,7 @@ namespace NetworkService.ViewModel
             });
             NavigateToGraphCommand = new RelayCommand(_ =>
             {
+                _navBackVM = null;
                 CurrentViewModel = _measurementGraphViewModel;
                 ViewTitle = "Graph view";
                 ShowBackButton = true;
@@ -222,9 +241,19 @@ namespace NetworkService.ViewModel
                 }
                 else if (CurrentViewModel is MeasurementGraphViewModel)
                 {
-                    CurrentViewModel = _homeViewModel;
-                    ViewTitle = "DER MONITOR";
-                    ShowBackButton = false;
+                    if (_navBackVM != null)
+                    {
+                        CurrentViewModel = _navBackVM;
+                        ViewTitle = _navBackTitle;
+                        ShowBackButton = _navBackShowBack;
+                        _navBackVM = null;
+                    }
+                    else
+                    {
+                        CurrentViewModel = _homeViewModel;
+                        ViewTitle = "DER MONITOR";
+                        ShowBackButton = false;
+                    }
                 }
                 else
                 {

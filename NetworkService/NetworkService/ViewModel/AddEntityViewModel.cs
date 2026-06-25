@@ -74,16 +74,18 @@ namespace NetworkService.ViewModel
             _pushUndo = pushUndo;
             SaveCommand = new RelayCommand(_ =>
             {
+                bool valid = true;
                 if (string.IsNullOrWhiteSpace(Naziv))
                 {
                     NazivError = "Name* is required";
-                    return;
+                    valid = false;
                 }
                 if (_selectedType == null)
                 {
                     TypError = "Type* is required";
-                    return;
+                    valid = false;
                 }
+                if (!valid) return;
                 var newEntity = new NetworkEntity
                 {
                     ID = this.ID,

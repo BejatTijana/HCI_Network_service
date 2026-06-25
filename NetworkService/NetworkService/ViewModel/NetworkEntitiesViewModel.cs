@@ -12,6 +12,7 @@ namespace NetworkService.ViewModel
     {
         private readonly ObservableCollection<NetworkEntity> _source;
         private readonly Action _navigateToAdd;
+        private readonly Action<NetworkEntity> _navigateToGraph;
         private readonly Func<string, bool> _confirmDelete;
         private readonly Action<string, string> _showToast;
         private readonly Action _restartSimulator;
@@ -68,15 +69,17 @@ namespace NetworkService.ViewModel
         public ICommand DeleteCommand { get; }
         public ICommand ClearSearchCommand { get; }
         public ICommand NavigateToAddCommand { get; }
+        public ICommand NavigateToGraphCommand { get; }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
         public NetworkEntitiesViewModel(ObservableCollection<NetworkEntity> source, Action navigateToAdd,
-            Func<string, bool> confirmDelete, Action<string, string> showToast,
+            Action<NetworkEntity> navigateToGraph, Func<string, bool> confirmDelete, Action<string, string> showToast,
             Action restartSimulator, Action<Action> pushUndo)
         {
             _source = source;
             _navigateToAdd = navigateToAdd;
+            _navigateToGraph = navigateToGraph;
             _confirmDelete = confirmDelete;
             _showToast = showToast;
             _restartSimulator = restartSimulator;
@@ -100,6 +103,7 @@ namespace NetworkService.ViewModel
 
             ClearSearchCommand = new RelayCommand(_ => SearchText = "");
             NavigateToAddCommand = new RelayCommand(_ => _navigateToAdd());
+            NavigateToGraphCommand = new RelayCommand(_ => _navigateToGraph(SelectedEntity), _ => SelectedEntity != null);
 
             ApplyFilter();
         }

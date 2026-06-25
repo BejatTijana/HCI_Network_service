@@ -65,7 +65,8 @@
                   SelectedItem="{Binding SelectedEntity, Mode=TwoWay}"
                   AlternationCount="2"
                   Background="#1C2833" BorderBrush="#34495E" BorderThickness="1"
-                  ToolTip="Select entity to delete or view">
+                  ToolTip="Select entity to delete or view. Double-click to open graph."
+                  vm:ListViewDoubleClickBehavior.Command="{Binding NavigateToGraphCommand}">
             <ListView.Resources>
                 <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="#1E8449"/>
                 <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" Color="#ECF0F1"/>

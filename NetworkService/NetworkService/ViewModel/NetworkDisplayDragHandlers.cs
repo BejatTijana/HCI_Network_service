@@ -182,4 +182,32 @@ namespace NetworkService.ViewModel
                 new SlotInteractionBehavior().Attach(fe);
         }
     }
+
+    public static class ListViewDoubleClickBehavior
+    {
+        public static readonly DependencyProperty CommandProperty =
+            DependencyProperty.RegisterAttached("Command", typeof(ICommand), typeof(ListViewDoubleClickBehavior),
+                new PropertyMetadata(null, OnCommandChanged));
+
+        public static ICommand GetCommand(DependencyObject obj) => (ICommand)obj.GetValue(CommandProperty);
+        public static void SetCommand(DependencyObject obj, ICommand value) => obj.SetValue(CommandProperty, value);
+
+        private static void OnCommandChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is ListView lv)
+            {
+                lv.MouseDoubleClick -= OnDoubleClick;
+                if (e.NewValue != null)
+                    lv.MouseDoubleClick += OnDoubleClick;
+            }
+        }
+
+        private static void OnDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            var lv = (ListView)sender;
+            var cmd = GetCommand(lv);
+            if (cmd?.CanExecute(null) == true)
+                cmd.Execute(null);
+        }
+    }
 }
