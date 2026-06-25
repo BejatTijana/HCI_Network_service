@@ -31,7 +31,22 @@ namespace NetworkService.ViewModel
             if (System.Math.Abs(diff.X) < SystemParameters.MinimumHorizontalDragDistance &&
                 System.Math.Abs(diff.Y) < SystemParameters.MinimumVerticalDragDistance) return;
             if (_tv.SelectedItem is Model.NetworkEntity entity)
+            {
+                var vm = GetVM();
+                if (vm != null && vm.CanvasSlots.Any(s => s.Entity?.ID == entity.ID)) return;
                 DragDrop.DoDragDrop(_tv, entity.ID.ToString(), DragDropEffects.Move);
+            }
+        }
+
+        private NetworkDisplayViewModel GetVM()
+        {
+            var fe = VisualTreeHelper.GetParent(_tv) as FrameworkElement;
+            while (fe != null)
+            {
+                if (fe.DataContext is NetworkDisplayViewModel vm) return vm;
+                fe = VisualTreeHelper.GetParent(fe) as FrameworkElement;
+            }
+            return null;
         }
     }
 
@@ -40,6 +55,7 @@ namespace NetworkService.ViewModel
         private FrameworkElement _fe;
         private bool _dragStarted;
         private Point _startPoint;
+        private bool _occupiedNotified;
 
         public void Attach(FrameworkElement fe)
         {
@@ -49,6 +65,30 @@ namespace NetworkService.ViewModel
             _fe.MouseLeftButtonUp += OnMouseUp;
             _fe.Drop += OnDrop;
             _fe.DragOver += OnDragOver;
+            _fe.DragEnter += OnDragEnter;
+            _fe.DragLeave += OnDragLeave;
+        }
+
+        private void OnDragEnter(object sender, DragEventArgs e)
+        {
+            if (_occupiedNotified) return;
+            if (!e.Data.GetDataPresent(DataFormats.StringFormat)) return;
+            var slot = _fe.DataContext as NetworkDisplayViewModel.CanvasSlot;
+            if (slot?.Entity == null) return;
+            bool sameEntity = int.TryParse((string)e.Data.GetData(DataFormats.StringFormat), out int dragId)
+                              && slot.Entity.ID == dragId;
+            if (!sameEntity)
+            {
+                GetVM()?.NotifySlotOccupied();
+                _occupiedNotified = true;
+            }
+        }
+
+        private void OnDragLeave(object sender, DragEventArgs e)
+        {
+            var pos = e.GetPosition(_fe);
+            if (pos.X < 0 || pos.Y < 0 || pos.X > _fe.ActualWidth || pos.Y > _fe.ActualHeight)
+                _occupiedNotified = false;
         }
 
         private void OnMouseDown(object sender, MouseButtonEventArgs e)
@@ -88,14 +128,37 @@ namespace NetworkService.ViewModel
             if (entity == null) return;
             var slot = _fe.DataContext as NetworkDisplayViewModel.CanvasSlot;
             if (slot == null) return;
+            if (slot.Entity != null && slot.Entity != entity)
+            {
+                vm.NotifySlotOccupied();
+                e.Handled = true;
+                return;
+            }
             vm.PlaceEntity(slot, entity);
             e.Handled = true;
         }
 
         private void OnDragOver(object sender, DragEventArgs e)
         {
-            e.Effects = e.Data.GetDataPresent(DataFormats.StringFormat)
-                ? DragDropEffects.Move : DragDropEffects.None;
+            if (!e.Data.GetDataPresent(DataFormats.StringFormat))
+            {
+                e.Effects = DragDropEffects.None;
+                e.Handled = true;
+                return;
+            }
+            var slot = _fe.DataContext as NetworkDisplayViewModel.CanvasSlot;
+            if (slot?.Entity != null)
+            {
+                bool sameEntity = int.TryParse((string)e.Data.GetData(DataFormats.StringFormat), out int dragId)
+                                  && slot.Entity.ID == dragId;
+                if (!sameEntity)
+                {
+                    e.Effects = DragDropEffects.None;
+                    e.Handled = true;
+                    return;
+                }
+            }
+            e.Effects = DragDropEffects.Move;
             e.Handled = true;
         }
 

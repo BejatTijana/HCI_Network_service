@@ -71,6 +71,7 @@ namespace NetworkService.ViewModel
 
         private readonly ObservableCollection<NetworkEntity> _entities;
         private readonly Action<Action> _pushUndo;
+        private readonly Action<string, string> _showNotification;
         private readonly List<(int, int)> _connections = new List<(int, int)>();
         private int? _connectingEntityId;
 
@@ -87,14 +88,19 @@ namespace NetworkService.ViewModel
         public ObservableCollection<ConnectionLineData> ConnectionLines { get; }
             = new ObservableCollection<ConnectionLineData>();
 
-        public NetworkDisplayViewModel(ObservableCollection<NetworkEntity> entities, Action<Action> pushUndo)
+        public NetworkDisplayViewModel(ObservableCollection<NetworkEntity> entities, Action<Action> pushUndo,
+            Action<string, string> showNotification = null)
         {
             _entities = entities;
             _pushUndo = pushUndo;
+            _showNotification = showNotification;
             CanvasSlots = new ObservableCollection<CanvasSlot>(
                 Enumerable.Range(0, 12).Select(_ => new CanvasSlot()));
             _entities.CollectionChanged += OnEntitiesChanged;
         }
+
+        public void NotifySlotOccupied()
+            => _showNotification?.Invoke("Slot zauzet", "Slot je već zauzet");
 
         private void OnEntitiesChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
@@ -112,11 +118,15 @@ namespace NetworkService.ViewModel
             var prevTargetEntity = target.Entity;
             if (prevSlot != null) prevSlot.Entity = null;
             target.Entity = entity;
+            entity.IsPlaced = true;
+            if (prevTargetEntity != null && prevSlot != null) prevTargetEntity.IsPlaced = true;
             OnPropertyChanged(nameof(EntityGroups));
             _pushUndo(() =>
             {
                 target.Entity = prevTargetEntity;
                 if (prevSlot != null) prevSlot.Entity = entity;
+                entity.IsPlaced = prevSlot != null;
+                if (prevTargetEntity != null) prevTargetEntity.IsPlaced = false;
                 OnPropertyChanged(nameof(EntityGroups));
                 UpdateConnectionLines();
             });
@@ -129,10 +139,11 @@ namespace NetworkService.ViewModel
             if (slot?.Entity == null) return;
             var entity = slot.Entity;
             slot.Entity = null;
+            entity.IsPlaced = false;
             ClearConnectionsForEntity(entity.ID);
             OnPropertyChanged(nameof(Connections));
             UpdateConnectionLines();
-            _pushUndo(() => { slot.Entity = entity; UpdateConnectionLines(); });
+            _pushUndo(() => { slot.Entity = entity; entity.IsPlaced = true; UpdateConnectionLines(); });
         }
 
         public NetworkEntity GetEntityById(int id)

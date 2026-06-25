@@ -11,6 +11,7 @@ namespace NetworkService.Model
         private EntityType _tip;
         private double _lastValue;
         private bool _lastValueValid;
+        private bool _isPlaced;
 
         public int ID
         {
@@ -40,6 +41,12 @@ namespace NetworkService.Model
         {
             get => _lastValueValid;
             set { _lastValueValid = value; OnPropertyChanged(nameof(LastValueValid)); }
+        }
+
+        public bool IsPlaced
+        {
+            get => _isPlaced;
+            set { _isPlaced = value; OnPropertyChanged(nameof(IsPlaced)); }
         }
 
         public class MeasurementPoint

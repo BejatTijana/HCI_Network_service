@@ -38,8 +38,20 @@
                     <HierarchicalDataTemplate ItemsSource="{Binding Entities}">
                         <HierarchicalDataTemplate.ItemTemplate>
                             <DataTemplate>
-                                <TextBlock Text="{Binding Naziv, StringFormat='&#x2022; {0}'}"
-                                           Foreground="#95A5A6" FontSize="12"/>
+                                <TextBlock Text="{Binding Naziv, StringFormat='&#x2022; {0}'}">
+                                    <TextBlock.Style>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="Foreground" Value="#95A5A6"/>
+                                            <Setter Property="FontSize" Value="12"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsPlaced}" Value="True">
+                                                    <Setter Property="Foreground" Value="#4A5568"/>
+                                                    <Setter Property="Opacity" Value="0.45"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
                             </DataTemplate>
                         </HierarchicalDataTemplate.ItemTemplate>
                         <TextBlock Text="{Binding TypeName, StringFormat='&#x25BC; {0}'}"

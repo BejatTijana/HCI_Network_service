@@ -131,6 +131,16 @@ namespace NetworkService.ViewModel
                     new NotificationContent { Title = title, Message = msg, Type = NotificationType.Success },
                     "WindowNotificationArea");
 
+            Action<string, string> showError = (title, msg) =>
+                _notificationManager.Show(
+                    new NotificationContent { Title = title, Message = msg, Type = NotificationType.Error },
+                    "WindowNotificationArea");
+
+            Action<string, string> showInfo = (title, msg) =>
+                _notificationManager.Show(
+                    new NotificationContent { Title = title, Message = msg, Type = NotificationType.Information },
+                    "WindowNotificationArea");
+
             Action<Action> pushUndoForEntities = undoAction => _undoStack.Push(() =>
             {
                 CurrentViewModel = _networkEntitiesViewModel;
@@ -155,7 +165,7 @@ namespace NetworkService.ViewModel
                     ShowBackButton = true;
                 },
                 showToast,
-                () => RestartMeteringSimulator(showToast),
+                () => RestartMeteringSimulator(showInfo),
                 pushUndoForEntities);
 
             _networkEntitiesViewModel = new NetworkEntitiesViewModel(Entities,
@@ -181,11 +191,11 @@ namespace NetworkService.ViewModel
                     d.Owner = Application.Current.MainWindow;
                     return d.ShowDialog() == true;
                 },
-                showToast,
-                () => RestartMeteringSimulator(showToast),
+                showError,
+                () => RestartMeteringSimulator(showInfo),
                 pushUndoForEntities);
 
-            _networkDisplayViewModel = new NetworkDisplayViewModel(Entities, pushUndoForDisplay);
+            _networkDisplayViewModel = new NetworkDisplayViewModel(Entities, pushUndoForDisplay, showError);
             _networkEntitiesViewModel.ClearConnections = id => _networkDisplayViewModel.ClearConnectionsForEntity(id);
             _measurementGraphViewModel = new MeasurementGraphViewModel(Entities);
             Entities.Add(new NetworkEntity { ID = 1, Naziv = "Solarni panel 1",
