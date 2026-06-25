@@ -18,6 +18,7 @@ namespace NetworkService.ViewModel
         private readonly Action<Action> _pushUndo;
         private string _naziv = "";
         private string _nazivError = "";
+        private string _typError = "";
         private EntityType _selectedType;
 
         public int ID => _entities.Any() ? _entities.Max(e => e.ID) + 1 : 1;
@@ -44,10 +45,18 @@ namespace NetworkService.ViewModel
         public List<EntityType> Types { get; } =
             new List<EntityType> { EntityType.SolarniPanel, EntityType.Vetrogenerator };
 
+        public string TypError
+        {
+            get => _typError;
+            set { _typError = value; OnPropertyChanged(nameof(TypError)); OnPropertyChanged(nameof(ShowTypError)); }
+        }
+
+        public bool ShowTypError => !string.IsNullOrEmpty(_typError);
+
         public EntityType SelectedType
         {
             get => _selectedType;
-            set { _selectedType = value; OnPropertyChanged(nameof(SelectedType)); }
+            set { _selectedType = value; TypError = ""; OnPropertyChanged(nameof(SelectedType)); }
         }
 
         public ICommand SaveCommand { get; }
@@ -63,13 +72,16 @@ namespace NetworkService.ViewModel
             _showToast = showToast;
             _restartSimulator = restartSimulator;
             _pushUndo = pushUndo;
-            _selectedType = EntityType.SolarniPanel;
-
             SaveCommand = new RelayCommand(_ =>
             {
                 if (string.IsNullOrWhiteSpace(Naziv))
                 {
                     NazivError = "Name* is required";
+                    return;
+                }
+                if (_selectedType == null)
+                {
+                    TypError = "Type* is required";
                     return;
                 }
                 var newEntity = new NetworkEntity
@@ -95,7 +107,8 @@ namespace NetworkService.ViewModel
         {
             Naziv = "";
             NazivError = "";
-            _selectedType = EntityType.SolarniPanel;
+            TypError = "";
+            _selectedType = null;
             OnPropertyChanged(nameof(SelectedType));
             OnPropertyChanged(nameof(ID));
         }

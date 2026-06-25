@@ -71,9 +71,21 @@
                                                 </Grid.ColumnDefinitions>
                                                 <TextBlock Grid.Column="0" Margin="8,0,4,0"
                                                            VerticalAlignment="Center"
-                                                           Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=SelectedItem.Ime}"
-                                                           Foreground="#ECF0F1" FontSize="13"
-                                                           IsHitTestVisible="False"/>
+                                                           FontSize="13"
+                                                           IsHitTestVisible="False">
+                                                    <TextBlock.Style>
+                                                        <Style TargetType="TextBlock">
+                                                            <Setter Property="Text" Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=SelectedItem.Ime}"/>
+                                                            <Setter Property="Foreground" Value="#ECF0F1"/>
+                                                            <Style.Triggers>
+                                                                <DataTrigger Binding="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=SelectedItem}" Value="{x:Null}">
+                                                                    <Setter Property="Text" Value="Odaberi tip..."/>
+                                                                    <Setter Property="Foreground" Value="#7F8C8D"/>
+                                                                </DataTrigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </TextBlock.Style>
+                                                </TextBlock>
                                                 <TextBlock Grid.Column="1" Text="▾" Foreground="#95A5A6"
                                                            FontSize="14" HorizontalAlignment="Center"
                                                            VerticalAlignment="Center" IsHitTestVisible="False"/>
@@ -114,6 +126,10 @@
                     </Style>
                 </ComboBox.ItemContainerStyle>
             </ComboBox>
+
+            <TextBlock Text="{Binding TypError}" Foreground="#E74C3C" FontSize="11"
+                       Margin="0,4,0,0"
+                       Visibility="{Binding ShowTypError, Converter={StaticResource BoolToVis}}"/>
 
             <TextBlock Text="Virtual keyboard" Foreground="#95A5A6" FontSize="11"
                        Margin="0,24,0,4"/>
