@@ -22,25 +22,25 @@ Aplikacija koristi jedinstven vizuelni identitet kroz sve poglede — tamna poza
 
 ### 2. Omogućiti frekventnijim korisnicima upotrebu prečica
 
-Drag-and-drop je napredna prečica namijenjena iskusnom korisniku. Umjesto prolaska kroz meni za odabir pozicije, korisnik direktno prevlači entitet iz TreeViewa na željeni slot u gridu. Dodatna prečica za naprednog korisnika je swap entiteta — prevlačenjem entiteta sa jednog slota na drugi dolazi do direktne zamjene pozicija bez potrebe za uklanjanjem i ponovnim postavljanjem. Prevlačenje entiteta nazad u oblast TreeViewa uklanja entitet sa mreže bez otvaranja dijaloga. Aplikacija ne nudi tipkovne prečice (npr. Ctrl+Z za undo), što je propust za korisnike koji preferiraju rad sa tastaturom.
+Drag-and-drop je napredna prečica namijenjena iskusnom korisniku. Umjesto prolaska kroz meni za odabir pozicije, korisnik direktno prevlači entitet iz TreeViewa na željeni slot u gridu. Dodatna prečica za naprednog korisnika je swap entiteta — prevlačenjem entiteta sa jednog slota na drugi dolazi do direktne zamjene pozicija bez potrebe za uklanjanjem i ponovnim postavljanjem. Prevlačenje entiteta nazad u oblast TreeViewa uklanja entitet sa mreže bez otvaranja dijaloga. Dupli klik na entitet u listi entiteta otvara grafikon mjerenja za taj konkretni entitet, preskačući nekoliko navigacijskih koraka. Budući da je aplikacija projektovana za touch ekran (390×844px), tipkovne prečice nisu relevantne i nisu implementirane.
 
 ---
 
 ### 3. Davati informativni feedback
 
-Sistem pruža kontinuiran vizuelni feedback. Zelene linije veze između entiteta iscrtavaju se odmah po uspostavljanju konekcije i brišu se automatski pri uklanjanju entiteta, što korisniku u svakom trenutku daje jasnu sliku topologije mreže. Vrijednosti mjerenja osvježavaju se svake sekunde putem tajmera, što korisnik direktno vidi na kartonima entiteta i na grafikonu mjerenja. Zona obavještavanja (NotificationArea) prikazuje sistemske poruke iznad svakog pogleda. Uočeni propust: pri restartu mjernog simulatora postoji pauza od ~1.5 sekundi tokom koje korisnik ne dobija nikakvu povratnu informaciju da se akcija izvršava.
+Sistem pruža kontinuiran vizuelni feedback. Zelene linije veze između entiteta iscrtavaju se odmah po uspostavljanju konekcije i brišu se automatski pri uklanjanju entiteta, što korisniku u svakom trenutku daje jasnu sliku topologije mreže. Vrijednosti mjerenja osvježavaju se svake sekunde putem tajmera, što korisnik direktno vidi na kartonima entiteta i na grafikonu mjerenja. Zona obavještavanja (NotificationArea) prikazuje sistemske poruke iznad svakog pogleda. Pri restartu mjernog simulatora (koji se dešava automatski nakon dodavanja ili brisanja entiteta) korisnik odmah dobija toast notifikaciju "Restartuje se...", a po završetku restarta drugu notifikaciju "Simulator je pokrenut" — čime je otklonjena prvobitna pauza bez feedbacka.
 
 ---
 
 ### 4. Projektovati dijaloge naglašene zatvorenosti
 
-Svaka sekvenca akcija u aplikaciji ima jasno definisan kraj. Dijalog za dodavanje entiteta nudi dugmad Sačuvaj i Odustani, čime korisnik uvijek ima eksplicitan izlaz. Dijalog za potvrdu brisanja je modalni prozor koji blokira ostatak aplikacije dok korisnik ne donese odluku — dugme Obriši vraća potvrdu akcije, dugme Odustani je poništava. Navigacija između četiri pogleda je trenutna i jednoznačna — korisnik uvijek zna na kom pogledu se nalazi i može se prebaciti jednim klikom.
+Svaka sekvenca akcija u aplikaciji ima jasno definisan kraj. Dijalog za dodavanje entiteta nudi dugmad Sačuvaj i Odustani, čime korisnik uvijek ima eksplicitan izlaz. Dijalog za potvrdu brisanja je modalni prozor koji blokira ostatak aplikacije dok korisnik ne donese odluku — dugme Obriši vraća potvrdu akcije, dugme Odustani je poništava. Navigacija između četiri pogleda je trenutna i jednoznačna — korisnik uvijek zna na kom pogledu se nalazi i može se prebaciti jednim klikom. Dugme Back pamti kontekst navigacije: ako je korisnik došao na grafikon duplim klikom iz liste entiteta, Back ga vraća na listu entiteta, a ne na početni ekran.
 
 ---
 
 ### 5. Ponuditi prevenciju i rukovanje greškom
 
-Aplikacija aktivno sprječava grešku umjesto da je samo prijavljuje. Mehanizam za interakciju sa slotom odbija drag na već zauzeti slot — korisnik ne može prepisati postavljeni entitet slučajnim prevlačenjem. Mehanizam za drop iz TreeViewa ne prihvata entitet koji je već prisutan na mreži, čime se onemogućava postavljanje duplikata. Veza između entiteta radi kao toggle — ponovni klik na isti par entiteta prekida vezu, bez mogućnosti dvostrukog uspostavljanja iste veze. Brisanje entiteta zahtijeva eksplicitnu potvrdu kroz modalni dijalog, što sprječava nenamjerno uklanjanje.
+Aplikacija aktivno sprječava grešku umjesto da je samo prijavljuje. Mehanizam za interakciju sa slotom odbija drag na već zauzeti slot — korisnik ne može prepisati postavljeni entitet slučajnim prevlačenjem. Mehanizam za drop iz TreeViewa ne prihvata entitet koji je već prisutan na mreži, čime se onemogućava postavljanje duplikata. Veza između entiteta radi kao toggle — ponovni klik na isti par entiteta prekida vezu, bez mogućnosti dvostrukog uspostavljanja iste veze. Brisanje entiteta zahtijeva eksplicitnu potvrdu kroz modalni dijalog, što sprječava nenamjerno uklanjanje. Forma za dodavanje entiteta validira oba obavezna polja istovremeno — ako su i naziv i tip prazni, oba errora se prikazuju odjednom, čime korisnik dobija kompletan pregled šta treba ispraviti bez višestrukog pritiskanja dugmeta.
 
 ---
 
@@ -64,6 +64,6 @@ TreeView sa grupiranim entitetima (po tipu: Solarni panel / Vetrogenerator) uvij
 
 ## Zaključak
 
-"DER Monitor" u velikoj mjeri zadovoljava Shneidermanova zlatna pravila. Najjače implementirana pravila su dozvoliti poništavanje efekata akcije (puni undo/redo stek) i ponuditi prevenciju greške (drag mehanizmi blokiraju neispravne akcije). Konzistentan vizuelni identitet kroz cijelu aplikaciju i stalni vizuelni feedback (linije veza, osvježavanje mjerenja) doprinose kvalitetu korisničkog iskustva.
+"DER Monitor" u velikoj mjeri zadovoljava Shneidermanova zlatna pravila. Najjače implementirana pravila su dozvoliti poništavanje efekata akcije (puni undo/redo stek), ponuditi prevenciju greške (drag mehanizmi blokiraju neispravne akcije, obavezna validacija obaju polja pri dodavanju) i davati informativni feedback (vizuelne linije veza, osvježavanje mjerenja svake sekunde, toast notifikacije pri restartu simulatora). Dupli klik kao prečica za naprednog korisnika i kontekstualna Back navigacija dodatno podižu kvalitet korisničkog iskustva.
 
-Uočeni propusti — nedostatak tipkovnih prečica, dualnost mehanizma unosa teksta i nedostatak indikatora napretka pri restartu simulatora — predstavljaju oblasti za unapređenje, ali ne narušavaju osnovu upotrebljivosti aplikacije.
+Jedini preostali propust je dualnost mehanizma unosa teksta — na pogledu za dodavanje entiteta koristi se standardni TextBox, dok je na pogledu za listu entiteta prisutna virtualna tastatura. Ovo je svjesna odluka uslovljena različitim kontekstima upotrebe, ali može zbuniti korisnika koji očekuje jedinstven mehanizam unosa.
