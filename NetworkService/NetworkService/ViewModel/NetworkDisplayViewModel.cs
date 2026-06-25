@@ -118,6 +118,7 @@ namespace NetworkService.ViewModel
                 target.Entity = prevTargetEntity;
                 if (prevSlot != null) prevSlot.Entity = entity;
                 OnPropertyChanged(nameof(EntityGroups));
+                UpdateConnectionLines();
             });
             OnPropertyChanged(nameof(Connections));
             UpdateConnectionLines();
@@ -131,7 +132,7 @@ namespace NetworkService.ViewModel
             ClearConnectionsForEntity(entity.ID);
             OnPropertyChanged(nameof(Connections));
             UpdateConnectionLines();
-            _pushUndo(() => slot.Entity = entity);
+            _pushUndo(() => { slot.Entity = entity; UpdateConnectionLines(); });
         }
 
         public NetworkEntity GetEntityById(int id)
