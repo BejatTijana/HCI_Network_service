@@ -200,8 +200,8 @@ namespace NetworkService.ViewModel
             _measurementGraphViewModel = new MeasurementGraphViewModel(Entities);
             Entities.Add(new NetworkEntity { ID = 1, Naziv = "Solarni panel 1",
                 Tip = EntityType.SolarniPanel, LastValue = 3.2, LastValueValid = true });
-            Entities.Add(new NetworkEntity { ID = 2, Naziv = "Vetrogenerator 1",
-                Tip = EntityType.Vetrogenerator, LastValue = 4.8, LastValueValid = true });
+            Entities.Add(new NetworkEntity { ID = 2, Naziv = "Vjetrogenerator 1",
+                Tip = EntityType.Vjetrogenerator, LastValue = 4.8, LastValueValid = true });
             Entities.Add(new NetworkEntity { ID = 3, Naziv = "Solarni panel 2",
                 Tip = EntityType.SolarniPanel, LastValue = 0.5, LastValueValid = false });
 

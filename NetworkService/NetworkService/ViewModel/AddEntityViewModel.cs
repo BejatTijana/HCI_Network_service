@@ -43,7 +43,7 @@ namespace NetworkService.ViewModel
         public bool ShowNazivError => !string.IsNullOrEmpty(_nazivError);
 
         public List<EntityType> Types { get; } =
-            new List<EntityType> { EntityType.SolarniPanel, EntityType.Vetrogenerator };
+            new List<EntityType> { EntityType.SolarniPanel, EntityType.Vjetrogenerator };
 
         public string TypError
         {
@@ -78,6 +78,11 @@ namespace NetworkService.ViewModel
                 if (string.IsNullOrWhiteSpace(Naziv))
                 {
                     NazivError = "Name* is required";
+                    valid = false;
+                }
+                else if (_entities.Any(e => e.Naziv.Equals(Naziv.Trim(), StringComparison.OrdinalIgnoreCase)))
+                {
+                    NazivError = "Name* already exists";
                     valid = false;
                 }
                 if (_selectedType == null)

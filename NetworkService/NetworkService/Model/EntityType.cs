@@ -11,7 +11,7 @@ namespace NetworkService.Model
             Slika = "/Resources/Images/SolarniPanel.png"
         };
 
-        public static readonly EntityType Vetrogenerator = new EntityType
+        public static readonly EntityType Vjetrogenerator = new EntityType
         {
             Ime = "Vjetrogenerator",
             Slika = "/Resources/Images/Vetrogenerator.png"

@@ -45,7 +45,6 @@ namespace NetworkService.ViewModel
             {
                 tb.Text = tb.Text.Insert(caret, " "); tb.CaretIndex = caret + 1;
             }
-            else if (key == "↵") { }
             else if (key == "SHIFT")
             {
                 IsShifted = !IsShifted;

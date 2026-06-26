@@ -70,7 +70,7 @@ Definicija tipa mrežnog entiteta (DER — Distributed Energy Resource).
 - `string Ime` — naziv tipa koji se prikazuje u UI-u (npr. "Solarni panel").
 - `string Slika` — putanja do slike tipa u obliku WPF pack URI-a (npr. `/Resources/Images/SolarniPanel.png`).
 - `static readonly EntityType SolarniPanel` — unaprijed kreiran singleton za tip "Solarni panel". Koristi se svuda u aplikaciji umjesto kreiranja novih instanci.
-- `static readonly EntityType Vetrogenerator` — unaprijed kreiran singleton za tip "Vetrogenerator".
+- `static readonly EntityType Vjetrogenerator` — unaprijed kreiran singleton za tip "Vjetrogenerator".
 
 **Zašto statični singletonovi:** Aplikacija ima tačno dva tipa entiteta koja su zadana specifikacijom (T4 kombinacija). Koristeći `static readonly`, garantuje se da se isti objekat koristi svuda — u modelu, UI-u, i `ComboBox`-u — pa poređenje referenci funkcioniše ispravno.
 
@@ -84,7 +84,7 @@ Model jednog mrežnog entiteta. Implementira `INotifyPropertyChanged` da bi WPF 
 
 - `int ID` — jedinstveni identifikator entiteta. Auto-inkrement: `AddEntityViewModel` računa `Max(ID) + 1`.
 - `string Naziv` — ime entiteta koje unosi korisnik. Validira se u `AddEntityViewModel`.
-- `EntityType Tip` — tip entiteta (SolarniPanel ili Vetrogenerator). Sadrži ime i putanju do slike.
+- `EntityType Tip` — tip entiteta (SolarniPanel ili Vjetrogenerator). Sadrži ime i putanju do slike.
 - `double LastValue` — poslednje primljeno mjerenje u MW od MeteringSimulatora. Opseg 0–10 MW; valjano je 1–5 MW.
 - `bool LastValueValid` — `true` ako je `LastValue` u opsegu 1–5 MW. Postavljeno u `MainWindowViewModel.createListener()` svaki put kada stigne novo mjerenje.
 - `List<MeasurementPoint> MeasurementHistory` — lista posjednjih 5 mjerenja. Inicijalizovana kao prazna lista; puni se u TCP listeneru. Ograničena na 5 elemenata: kad padne šesto mjerenje, prvo se uklanja.
@@ -141,7 +141,7 @@ Kreira sve ViewModele u tačno određenom redoslijedu:
 
 Kreira tri unaprijed definisana entiteta (za odbranu):
 - Solarni panel 1, vrijednost 3.2 MW (validna)
-- Vetrogenerator 1, vrijednost 4.8 MW (validna)
+- Vjetrogenerator 1, vrijednost 4.8 MW (validna)
 - Solarni panel 2, vrijednost 0.5 MW (nije validna — prikazuje se crveno)
 
 **`RestartMeteringSimulator(Action<string, string> showToast = null)`**
@@ -235,7 +235,7 @@ ViewModel za formu dodavanja novog entiteta.
 - `bool ShowNazivError` — computed: `true` ako `NazivError` nije prazno. Koristi se sa `BooleanToVisibilityConverter` u XAML-u.
 - `string TypError` — poruka greške ispod ComboBox-a kada tip nije odabran.
 - `bool ShowTypError` — computed: `true` ako `TypError` nije prazno.
-- `List<EntityType> Types` — fiksna lista `{ SolarniPanel, Vetrogenerator }` za ComboBox.
+- `List<EntityType> Types` — fiksna lista `{ SolarniPanel, Vjetrogenerator }` za ComboBox.
 - `EntityType SelectedType` — odabrani tip u ComboBox-u. Default je `null` — korisnik mora eksplicitno odabrati tip. Svaka promjena briše `TypError`.
 
 **`SaveCommand`**
@@ -595,7 +595,7 @@ name => { var d = new ConfirmDeleteDialog(name); d.Owner = ...; return d.ShowDia
 
 - `Logo.png` — logo aplikacije, prikazuje se na Home ekranu (90×90px).
 - `SolarniPanel.png` — ikona za tip "Solarni panel", prikazuje se u canvas slotovima i TreeView-u.
-- `Vetrogenerator.png` — ikona za tip "Vetrogenerator".
+- `Vetrogenerator.png` — ikona za tip "Vjetrogenerator".
 
 Slike su kompajlirane kao `Resource` u `.csproj`-u i dostupne putem WPF pack URI-a (`/Resources/Images/naziv.png`).
 
@@ -621,3 +621,153 @@ Slike su kompajlirane kao `Resource` u `.csproj`-u i dostupne putem WPF pack URI
 | `CloseMainWindow()` + fallback `Kill()` | Direktan `Kill()` izazvao Windows crash dialog; čist izlaz je uvijek preferirani put |
 | `DispatcherTimer` u grafikonu | Automatski se izvršava na UI niti; eliminiše potrebu za `Dispatcher.Invoke` u ticker logici |
 | Koordinate linija u VM | Podaci o pozicijama su izvedeni iz indeksa i dimenzija slotova; VM ih izračunava, XAML samo crta |
+
+---
+
+## Objašnjenja ključnih funkcija
+
+### Pretraga — ApplyFilter()
+
+`ApplyFilter()` se poziva svaki put kad korisnik promijeni tekst za pretragu ili radio dugme. Puni `FilteredEntities` samo sa entitetima koji odgovaraju kriteriju.
+
+```csharp
+bool match = string.IsNullOrEmpty(term)
+    || (_searchByName && e.Naziv.ToLowerInvariant().Contains(term))
+    || (_searchByType && e.Tip.Ime.ToLowerInvariant().Contains(term));
+```
+
+- Prazno polje → prikaži sve
+- `Contains` → djelimično poklapanje (ne mora biti cijela riječ)
+- `ToLowerInvariant()` na oba mjesta → case-insensitive bez obzira na sistemsku lokalizaciju
+
+Radio dugmad su međusobno isključiva: kad se uključi `SearchByName`, setter automatski setuje `_searchByType = false` i obrnuto. `ClearSearchCommand` samo setuje `SearchText = ""` što triggera setter koji poziva `ApplyFilter()`.
+
+---
+
+### Dodavanje entiteta — SaveCommand
+
+ID je computed property: `_entities.Any() ? _entities.Max(e => e.ID) + 1 : 1`. Uvijek maksimalni postojeći ID + 1, korisnik ga ne može mijenjati.
+
+Validacija koristi `bool valid` pattern umjesto `return` nakon prve greške — oba errora se prikazuju odjednom:
+
+```csharp
+bool valid = true;
+if (string.IsNullOrWhiteSpace(Naziv)) { NazivError = "Name* is required"; valid = false; }
+if (_selectedType == null) { TypError = "Type* is required"; valid = false; }
+if (!valid) return;
+```
+
+`_selectedType` počinje kao `null` — tip mora biti eksplicitno izabran, nije automatski odabran. Greška nestaje čim korisnik počne da kuca jer setter za `Naziv` resetuje `NazivError = ""`.
+
+**Reset()** se poziva nakon Save i Cancel jer je `_addEntityViewModel` instanca kreirana jednom i živi cijelo vrijeme aplikacije — bez reseta, forma bi imala podatke od prethodnog unosa.
+
+---
+
+### Brisanje entiteta — DeleteCommand
+
+`CanExecute = SelectedEntity != null` — dugme je neaktivno dok ništa nije selektovano.
+
+```csharp
+var capturedEntity = SelectedEntity;
+int capturedIndex = _source.IndexOf(capturedEntity);
+_source.Remove(capturedEntity);
+ClearConnections(capturedEntity.ID);
+_pushUndo(() => _source.Insert(Math.Min(capturedIndex, _source.Count), capturedEntity));
+```
+
+`capturedEntity` i `capturedIndex` se hvataju u lokalne varijable prije brisanja jer se `SelectedEntity` mijenja čim entitet izađe iz kolekcije. `Math.Min` štiti od situacije kad je entitet bio zadnji — ne može se insertovati na index koji ne postoji. `ClearConnections` uklanja sve linije na canvasu vezane za obrisani entitet.
+
+`_confirmDelete` je `Func<string, bool>` — otvara `ConfirmDeleteDialog` koji blokira dok korisnik ne odluči. Vraća `true` samo ako je kliknuto Delete.
+
+---
+
+### Virtualna tastatura — OnKeyPress
+
+Svako dugme u XAML-u šalje sopstveni `Content` kao `CommandParameter` (`RelativeSource Self`) — ne treba poseban kod za svako dugme.
+
+```csharp
+int caret = tb.CaretIndex;  // pozicija kursora
+
+if (key == "⌫")       tb.Text = tb.Text.Remove(caret - 1, 1);
+else if (key == "space") tb.Text = tb.Text.Insert(caret, " ");
+else if (key == "SHIFT") IsShifted = !IsShifted;
+else if (char.IsLetter(key[0]))
+{
+    tb.Text = tb.Text.Insert(caret, IsShifted ? key.ToUpper() : key.ToLower());
+    IsShifted = false;  // auto-reset nakon jednog slova
+}
+```
+
+`CaretIndex` prati gdje je kursor — tekst se umetne na tačnu poziciju. Shift se automatski gasi nakon jednog slova (kao na fizičkoj tastaturi). `_isShifted` počinje kao `true` — prvo slovo je automatski veliko.
+
+**VirtualKeyboardAttacher** rješava problem što tastatura ima sopstveni `DataContext` i ne zna koji `TextBox` treba puniti. Attached property prima referencu na `TextBox` iz roditeljskog Viewa i prosljeđuje je ViewModelu. `Loaded` event guard osigurava da se ovo desi tek kad je `DataContext` spreman.
+
+---
+
+### Drag & Drop
+
+**Pokretanje draga** (`TreeViewDragBehavior.OnMouseMove`): provjerava `MinimumDragDistance` da se razlikuje od klika. Provjerava `CanvasSlots.Any(s => s.Entity?.ID == entity.ID)` — entitet koji je već na canvasu ne može se ponovo vući. Šalje samo `entity.ID.ToString()` kao podatak.
+
+**Primanje dropa** (`SlotInteractionBehavior.OnDrop`): prima ID, pronađe entitet, postavi na slot. Ako je slot zauzet — blokira.
+
+**PlaceEntity** pokriva tri scenarija: drag iz TreeViewa (`prevSlot = null`), premještanje slot→slot (`prevSlot` ima vrijednost), i undo koji vraća oba slota u prethodno stanje.
+
+**Toast za zauzeti slot** ide kroz `DragEnter` (ne `OnDrop`) jer `OnDrop` ne pali kad je `DragDropEffects.None` setovan u `OnDragOver`. `_occupiedNotified` flag sprječava višestruke toaste — resetuje se u `OnDragLeave` kad miš stvarno napusti slot.
+
+**TVAreaDropBehavior**: drag entiteta nazad u oblast TreeViewa poziva `RemoveFromSlot` — entitet se uklanja sa canvasa, `IsPlaced = false`, posivi se u TreeViewu.
+
+---
+
+### Konekcijske linije — ConnectOrDisconnect
+
+Klik na prvi slot zapamti `_connectingEntityId`. Klik na drugi slot napravi ili ukloni par. Klik na isti slot odustaje.
+
+Normalizacija para: `a = Math.Min(id1, id2)`, `b = Math.Max(id1, id2)` — sprječava duplikate jer (3,5) i (5,3) su isti par.
+
+`SetConnectingEntityId` pali `IsSelectedForConnection = true` na selektovanom slotu — XAML reaguje narandžastom ivicom.
+
+**UpdateConnectionLines** traži indeks svakog entiteta u `CanvasSlots`, izračunava centar slota:
+```csharp
+X = (index % 4) * cellW + cellW / 2  // kolona
+Y = (index / 4) * cellH + cellH / 2  // red
+```
+Ako entitet nije na canvasu (`index = -1`), linija se preskače. Poziva se nakon svake promjene slotova i u svim undo lambdama.
+
+---
+
+### Kružni markeri — UpdateDisplayShapes
+
+```csharp
+cx[i] = 60 + i * 60;
+cy[i] = 20 + (1.0 - (points[i].Value - minVal) / range) * 160;
+```
+
+X je ravnomjerni razmak od 60px. Y formula invertuje vrijednost (`1.0 - ...`) jer veći Y znači niže u WPF-u, a veća vrijednost treba biti više na ekranu. `range < 0.1 → range = 1.0` štiti od dijeljenja nulom kad su sve vrijednosti iste.
+
+Zeleni kružić = validno mjerenje (1–5 MW). Crveni sa isprekidanom ivicom = nevalidno. `DataTrigger` na `IsValid` u XAML-u prebacuje između stilova bez ikakvog koda.
+
+`DispatcherTimer` svaке sekunde poziva `UpdateDisplayShapes()` — grafik se osvježava u realnom vremenu. Radi na UI threadu pa ne treba `Dispatcher.Invoke`.
+
+---
+
+### Undo mehanizam
+
+```csharp
+private readonly Stack<Action> _undoStack = new Stack<Action>();
+```
+
+LIFO stek — posljednja akcija koja je ušla, prva izlazi.
+
+Svaki `pushUndo` uvija undo lambdu u još jednu lambdu koja prvo navigira na pravi view, pa tek onda poništava akciju:
+
+```csharp
+Action<Action> pushUndoForEntities = undoAction => _undoStack.Push(() =>
+{
+    CurrentViewModel = _networkEntitiesViewModel;
+    undoAction();
+});
+```
+
+`UndoCommand`: `Pop()` skida posljednju lambdu, `Invoke()` je izvršava. `CanExecute = _undoStack.Count > 0` — dugme neaktivno kad nema šta poništiti.
+
+Svaka destruktivna akcija hvata potrebne varijable u closure prije izvršavanja, jer se stanje mijenja i originalni podaci više nisu dostupni.
